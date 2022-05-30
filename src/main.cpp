@@ -76,6 +76,106 @@ struct CPU
         cycles--;
         return memory[address];
     }
+
+    // **** Addressing modes ****
+
+    // Immediate addressing
+    byte IM(word cycles, Memory memory)
+    {
+        return FetchInstruction(cycles, memory);
+    }
+
+    // Zeropage addressing
+    byte ZP(word cycles, Memory memory)
+    {
+        byte address = FetchInstruction(cycles, memory);
+        return ReadByte(cycles, address, memory);
+    }
+
+    // Zeropage, X addressing
+    byte ZX(word cycles, Memory memory)
+    {
+        byte address = FetchInstruction(cycles, memory) + X;
+        cycles--;
+        return ReadByte(cycles, address, memory);
+    }
+
+    // Absolute addressing
+    byte AB(word cycles, Memory memory)
+    {
+        byte address = FetchInstruction(cycles, memory);
+        byte address_2 = FetchInstruction(cycles, memory);
+        hword full_address = (hword)address | (hword)(address_2 << 8);
+        return ReadByte(cycles, full_address, memory);
+    }
+
+    // Absolute, X addressing
+    byte AX(word cycles, Memory memory)
+    {
+        byte address = FetchInstruction(cycles, memory);
+        byte address_2 = FetchInstruction(cycles, memory);
+        hword full_address = (hword)address | (hword)(address_2 << 8) + X;
+        if ((full_address & 0xFF00) != (PC & 0xFF00))
+        {
+            cycles--;
+        }
+        return ReadByte(cycles, full_address, memory);
+    }
+
+    // Absolute, Y addressing
+    byte AY(word cycles, Memory memory)
+    {
+        byte address = FetchInstruction(cycles, memory);
+        byte address_2 = FetchInstruction(cycles, memory);
+        hword full_address = (hword)address | (hword)(address_2 << 8) + Y;
+        if ((full_address & 0xFF00) != (PC & 0xFF00))
+        {
+            cycles--;
+        }
+        return ReadByte(cycles, full_address, memory);
+    }
+
+    // (Indirect, X) addressing
+    byte IX(word cycles, Memory memory)
+    {
+        byte imm_address = FetchInstruction(cycles, memory) + X;
+        cycles--;
+        byte address = ReadByte(cycles, imm_address, memory);
+        byte address_2 = ReadByte(cycles, ++imm_address, memory);
+        hword full_address = (((hword)address_2 << 8) | (hword)address);
+        return ReadByte(cycles, full_address, memory);
+    }
+
+    // (Indirect), Y addressing
+    byte IY(word cycles, Memory memory)
+    {
+        byte imm_address = FetchInstruction(cycles, memory);
+        byte address = ReadByte(cycles, imm_address, memory);
+        byte address_2 = ReadByte(cycles, ++imm_address, memory);
+        hword full_address = (((hword)address_2 << 8) | (hword)address) + Y;
+        if ((full_address & 0xFF00) != (PC & 0xFF00))
+        {
+            cycles--;
+        }
+        return ReadByte(cycles, full_address, memory);
+    }
+
+    // Generic sum operation
+    void ADC(byte operand)
+    {
+        hword temp = (hword)operand + (hword)A;
+        if (temp > 255)
+        {
+            C = 1;
+        }
+        if ((temp & 0x00ff) == 0)
+        {
+            Z = 1;
+        }
+        N = temp & 0x80;
+        V = (~((hword)A ^ (hword)operand) & ((hword)A ^ (hword)temp) & 0x0080);
+        A = temp & 0x00FF;
+    }
     
 
     // **** Opcodes ****
@@ -114,170 +214,50 @@ struct CPU
             {
                 case ADC_IM:
                 {
-                    byte operand = FetchInstruction(cycles, memory);
-                    hword temp = (hword)operand + (hword)A;
-                    if (temp > 255)
-                    {
-                        C = 1;
-                    }
-                    if ((temp & 0x00ff) == 0)
-                    {
-                        Z = 1;
-                    }
-                    N = temp & 0x80;
-                    V = (~((hword)A ^ (hword)operand) & ((hword)A ^ (hword)temp) & 0x0080);
-                    A = temp & 0x00FF;
+                    byte operand = IM(cycles, memory);
+                    ADC(operand);
                 } break;
 
                 case ADC_ZP:
                 {
-                    byte address = FetchInstruction(cycles, memory);
-                    byte operand = ReadByte(cycles, address, memory);
-                    hword temp = (hword)operand + (hword)A;
-                    if (temp > 255)
-                    {
-                        C = 1;
-                    }
-                    if ((temp & 0x00ff) == 0)
-                    {
-                        Z = 1;
-                    }
-                    N = temp & 0x80;
-                    V = (~((hword)A ^ (hword)operand) & ((hword)A ^ (hword)temp) & 0x0080);
-                    A = temp & 0x00FF;
+                    byte operand = ZP(cycles, memory);
+                    ADC(operand);
                 } break;
 
                 case ADC_ZX:
                 {
-                    byte address = FetchInstruction(cycles, memory) + X;
-                    byte operand = ReadByte(cycles, address, memory);
-                    hword temp = (hword)operand + (hword)A;
-                    if (temp > 255)
-                    {
-                        C = 1;
-                    }
-                    if ((temp & 0x00ff) == 0)
-                    {
-                        Z = 1;
-                    }
-                    N = temp & 0x80;
-                    V = (~((hword)A ^ (hword)operand) & ((hword)A ^ (hword)temp) & 0x0080);
-                    A = temp & 0x00FF;
+                    byte operand = ZX(cycles, memory);
+                    ADC(operand);
                 } break;
 
                 case ADC_AB:
                 {
-                    byte address = FetchInstruction(cycles, memory);
-                    byte address_2 = FetchInstruction(cycles, memory);
-                    hword full_address = (hword)address | (hword)(address_2 << 8);
-                    byte operand = ReadByte(cycles, full_address, memory);
-                    hword temp = (hword)operand + (hword)A;
-                    if (temp > 255)
-                    {
-                        C = 1;
-                    }
-                    if ((temp & 0x00ff) == 0)
-                    {
-                        Z = 1;
-                    }
-                    N = temp & 0x80;
-                    V = (~((hword)A ^ (hword)operand) & ((hword)A ^ (hword)temp) & 0x0080);
-                    A = temp & 0x00FF;
+                    byte operand = AB(cycles, memory);
+                    ADC(operand);
                 } break;
 
                 case ADC_AX:
                 {
-                    byte address = FetchInstruction(cycles, memory);
-                    byte address_2 = FetchInstruction(cycles, memory);
-                    hword full_address = (hword)address | (hword)(address_2 << 8) + X;
-                    if ((full_address & 0xFF00) != (PC & 0xFF00))
-                    {
-                        cycles--;
-                    }
-                    byte operand = ReadByte(cycles, full_address, memory);
-                    hword temp = (hword)operand + (hword)A;
-                    if (temp > 255)
-                    {
-                        C = 1;
-                    }
-                    if ((temp & 0x00ff) == 0)
-                    {
-                        Z = 1;
-                    }
-                    N = temp & 0x80;
-                    V = (~((hword)A ^ (hword)operand) & ((hword)A ^ (hword)temp) & 0x0080);
-                    A = temp & 0x00FF;
+                    byte operand = AX(cycles, memory);
+                    ADC(operand);
                 } break;
 
                 case ADC_AY:
                 {
-                    byte address = FetchInstruction(cycles, memory);
-                    byte address_2 = FetchInstruction(cycles, memory);
-                    hword full_address = (hword)address | (hword)(address_2 << 8) + Y;
-                    if ((full_address & 0xFF00) != (PC & 0xFF00))
-                    {
-                        cycles--;
-                    }
-                    byte operand = ReadByte(cycles, full_address, memory);
-                    hword temp = (hword)operand + (hword)A;
-                    if (temp > 255)
-                    {
-                        C = 1;
-                    }
-                    if ((temp & 0x00ff) == 0)
-                    {
-                        Z = 1;
-                    }
-                    N = temp & 0x80;
-                    V = (~((hword)A ^ (hword)operand) & ((hword)A ^ (hword)temp) & 0x0080);
-                    A = temp & 0x00FF;
+                    byte operand = AY(cycles, memory);
+                    ADC(operand);
                 } break;
 
                 case ADC_IX:
-                {
-                    byte imm_address = FetchInstruction(cycles, memory) + X;
-                    cycles--;
-                    byte address = ReadByte(cycles, imm_address, memory);
-                    byte address_2 = ReadByte(cycles, ++imm_address, memory);
-                    hword full_address = (((hword)address_2 << 8) | (hword)address);
-                    byte operand = ReadByte(cycles, full_address, memory);
-                    hword temp = (hword)operand + (hword)A;
-                    if (temp > 255)
-                    {
-                        C = 1;
-                    }
-                    if ((temp & 0x00ff) == 0)
-                    {
-                        Z = 1;
-                    }
-                    N = temp & 0x80;
-                    V = (~((hword)A ^ (hword)operand) & ((hword)A ^ (hword)temp) & 0x0080);
-                    A = temp & 0x00FF;
+                { 
+                    byte operand = IX(cycles, memory);
+                    ADC(operand);
                 } break;
 
                 case ADC_IY:
                 {
-                    byte imm_address = FetchInstruction(cycles, memory);
-                    byte address = ReadByte(cycles, imm_address, memory);
-                    byte address_2 = ReadByte(cycles, ++imm_address, memory);
-                    hword full_address = (((hword)address_2 << 8) | (hword)address) + Y;
-                    if ((full_address & 0xFF00) != (PC & 0xFF00))
-                    {
-                        cycles--;
-                    }
-                    byte operand = ReadByte(cycles, full_address, memory);
-                    hword temp = (hword)operand + (hword)A;
-                    if (temp > 255)
-                    {
-                        C = 1;
-                    }
-                    if ((temp & 0x00ff) == 0)
-                    {
-                        Z = 1;
-                    }
-                    N = temp & 0x80;
-                    V = (~((hword)A ^ (hword)operand) & ((hword)A ^ (hword)temp) & 0x0080);
-                    A = temp & 0x00FF;
+                    byte operand = IY(cycles, memory);
+                    ADC(operand);
                 } break;
 
 
@@ -285,91 +265,56 @@ struct CPU
 
                 case LDA_IM:
                 {
-                    byte value = FetchInstruction(cycles, memory);
-                    A = value;
+                    A = IM(cycles, memory);
                     Z = (A == 0);
                     N = (A & 0b10000000) > 0;
                 } break;
 
                 case LDA_ZP:
                 {
-                    byte address = FetchInstruction(cycles, memory);
-                    A = ReadByte(cycles, address, memory);
+                    A = ZP(cycles, memory);
                     Z = (A == 0);
                     N = (A & 0b10000000) > 0;
                 } break;
 
                 case LDA_ZX:
                 {
-                    byte address = FetchInstruction(cycles, memory);
-                    address += X;
-                    cycles--;
-                    A = ReadByte(cycles, address, memory);
+                    A = ZX(cycles, memory);
                     Z = (A == 0);
                     N = (A & 0b10000000) > 0;
                 } break;
 
                 case LDA_AB:
                 {
-                    byte address = FetchInstruction(cycles, memory);
-                    byte address_2 = FetchInstruction(cycles, memory);
-                    hword full_address = ((hword)address_2 << 8) | (hword)address;
-                    A = ReadByte(cycles, full_address, memory);
+                    A = AB(cycles, memory);
                     Z = (A == 0);
                     N = (A & 0b10000000) > 0;
                 } break;
 
                 case LDA_AX:
                 {
-                    byte address = FetchInstruction(cycles, memory);
-                    byte address_2 = FetchInstruction(cycles, memory);
-                    hword full_address = ((hword)address_2 << 8) | (hword)address + X;
-                    if ((full_address & 0xFF00) != (PC & 0xFF00))
-                    {
-                        cycles--;
-                    }
-                    A = ReadByte(cycles, full_address, memory);
+                    A = AX(cycles, memory);
                     Z = (A == 0);
                     N = (A & 0b10000000) > 0;
                 } break;
 
                 case LDA_AY:
                 {
-                    byte address = FetchInstruction(cycles, memory);
-                    byte address_2 = FetchInstruction(cycles, memory);
-                    hword full_address = ((hword)address_2 << 8) | (hword)address + Y;
-                    if ((full_address & 0xFF00) != (PC & 0xFF00))
-                    {
-                        cycles--;
-                    }
-                    A = ReadByte(cycles, full_address, memory);
+                    A = AY(cycles, memory);
                     Z = (A == 0);
                     N = (A & 0b10000000) > 0;
                 } break;
 
                 case LDA_IX:
                 {
-                    byte imm_address = FetchInstruction(cycles, memory) + X;
-                    cycles--;
-                    byte address = ReadByte(cycles, imm_address, memory);
-                    byte address_2 = ReadByte(cycles, ++imm_address, memory);
-                    hword full_address = (((hword)address_2 << 8) | (hword)address);
-                    A = ReadByte(cycles, full_address, memory);
+                    A = IX(cycles, memory);
                     Z = (A == 0);
                     N = (A & 0b10000000) > 0;
                 } break;
 
                 case LDA_IY:
                 {
-                    byte imm_address = FetchInstruction(cycles, memory);
-                    byte address = ReadByte(cycles, imm_address, memory);
-                    byte address_2 = ReadByte(cycles, ++imm_address, memory);
-                    hword full_address = (((hword)address_2 << 8) | (hword)address) + Y;
-                    if ((full_address & 0xFF00) != (PC & 0xFF00))
-                    {
-                        cycles--;
-                    }
-                    A = ReadByte(cycles, full_address, memory);
+                    A = IY(cycles, memory);
                     Z = (A == 0);
                     N = (A & 0b10000000) > 0;
                 } break;
