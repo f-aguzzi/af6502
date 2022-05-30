@@ -187,12 +187,11 @@ struct CPU
 
                 case LDA_IX:
                 {
-                    byte address = FetchInstruction(cycles, memory);
-                    byte address_2 = FetchInstruction(cycles, memory);
-                    hword full_address = ((hword)address_2 << 8) | (hword)address + X;
-                    address = ReadByte(cycles, full_address, memory);
-                    address_2 = FetchInstruction(cycles, memory);
-                    full_address = ((hword)address << 8) || (hword)address_2;
+                    byte imm_address = FetchInstruction(cycles, memory) + X;
+                    cycles--;
+                    byte address = ReadByte(cycles, imm_address, memory);
+                    byte address_2 = ReadByte(cycles, ++imm_address, memory);
+                    hword full_address = (((hword)address_2 << 8) | (hword)address);
                     A = ReadByte(cycles, full_address, memory);
                     Z = (A == 0);
                     N = (A & 0b10000000) > 0;
@@ -200,13 +199,14 @@ struct CPU
 
                 case LDA_IY:
                 {
-                    byte address = FetchInstruction(cycles, memory);
-                    byte address_2 = FetchInstruction(cycles, memory);
-                    hword full_address = ((hword)address_2 << 8) | (hword)address;
-                    address = ReadByte(cycles, full_address, memory);
-                    address_2 = FetchInstruction(cycles, memory);
-                    full_address = ((hword)address_2 << 8) | (hword)address + Y;
-                    
+                    byte imm_address = FetchInstruction(cycles, memory);
+                    byte address = ReadByte(cycles, imm_address, memory);
+                    byte address_2 = ReadByte(cycles, ++imm_address, memory);
+                    hword full_address = (((hword)address_2 << 8) | (hword)address) + Y;
+                    if ((full_address & 0xFF00) != (PC & 0xFF00))
+                    {
+                        cycles--;
+                    }
                     A = ReadByte(cycles, full_address, memory);
                     Z = (A == 0);
                     N = (A & 0b10000000) > 0;
@@ -218,7 +218,7 @@ struct CPU
                 {
                     byte address = FetchInstruction(cycles, memory);
                     byte address_2 = FetchInstruction(cycles, memory);
-                    hword full_address = ((hword)address << 8) || (hword)address_2;
+                    hword full_address = ((hword)address_2 << 8) | (hword)address;
                     PC = full_address;
                 } break;
 
@@ -226,7 +226,7 @@ struct CPU
                 {
                     byte address = FetchInstruction(cycles, memory);
                     byte address_2 = FetchInstruction(cycles, memory);
-                    hword full_address = ((hword)address << 8) || (hword)address_2;
+                    hword full_address = ((hword)address_2 << 8) | (hword)address;
                     byte jmp_byte = ReadByte(cycles, full_address, memory);
                     full_address++;
                     byte jmp_byte_2 = ReadByte(cycles, full_address, memory);
@@ -245,7 +245,7 @@ struct CPU
                     memory.WriteByte(cycles, SP + 1, PC_2);
                     byte address = FetchInstruction(cycles, memory);
                     byte address_2 = FetchInstruction(cycles, memory);
-                    hword full_address = ((hword)address << 8) || (hword)address_2;
+                    hword full_address = ((hword)address_2 << 8) | (hword)address;
                     PC = full_address;
                 } break;
 
