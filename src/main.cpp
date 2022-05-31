@@ -204,6 +204,29 @@ struct CPU
         A = temp & 0x00FF;
     }
 
+    // Generic branch operation
+    void Branch(byte address, word &cycles, bool condition)
+    {
+        word page = PC % 256;
+        if (condition)
+        {
+            PC += address;
+        }
+        if (PC % 256 > page)
+        {
+            cycles -= 2;
+        }
+    }
+
+    // Generic BIT operation
+    void BIT(byte operand, word &cycles)
+    {
+        cycles -= 2;
+        N = operand & 0x2;
+        V = operand & 0x3;
+        Z = operand && A;
+    }
+
     // **** Opcodes ****
     // ADC
     static constexpr byte ADC_IM = 0x69;    // Immediate
@@ -229,6 +252,20 @@ struct CPU
     static constexpr byte ASL_ZX = 0x16;    // Zeropage, X
     static constexpr byte ASL_AB = 0x0E;    // Absolute
     static constexpr byte ASL_AX = 0x1E;    // Absolute, X
+    // Branches
+    static constexpr byte BCC = 0x90;   // Relative
+    static constexpr byte BCS = 0xB0;   // Relative
+    static constexpr byte BEQ = 0xF0;   // Relative
+    static constexpr byte BMI = 0x30;   // Relative
+    static constexpr byte BNE = 0xD0;   // Relative
+    static constexpr byte BPL = 0x10;   // Relative
+    static constexpr byte BVC = 0x50;   // Relative
+    static constexpr byte BVS = 0x70;   // Relative
+    // BIT
+    static constexpr byte BIT_ZP = 0x24;   // zeropage
+    static constexpr byte BIT_AB = 0x2C;   // absolute
+    // BRK
+    static constexpr byte BRK = 0x00;   // Implied
     // LDA
     static constexpr byte LDA_IM = 0xA9;    // Immediate
     static constexpr byte LDA_ZP = 0xA5;    // Zeropage
@@ -379,6 +416,99 @@ struct CPU
                 {
                     byte operand = AB(cycles, memory);
                     ASL(operand);
+                } break;
+
+                // BRANCH   
+
+                case BCC:
+                {
+                    byte address = IM(cycles, memory);
+                    bool condition = (C == 0);
+                    Branch(address, cycles, condition);
+                } break;
+
+                case BCS:
+                {
+                    byte address = IM(cycles, memory);
+                    bool condition = (C == 1);
+                    Branch(address, cycles, condition);
+                } break;
+
+                case BEQ:
+                {
+                    byte address = IM(cycles, memory);
+                    bool condition = (Z == 1);
+                    Branch(address, cycles, condition);
+                } break;
+
+                case BMI:
+                {
+                    byte address = IM(cycles, memory);
+                    bool condition = (N == 1);
+                    Branch(address, cycles, condition);
+                } break;
+                
+                case BNE:
+                {
+                    byte address = IM(cycles, memory);
+                    bool condition = (Z == 0);
+                    Branch(address, cycles, condition);
+                } break;
+
+                case BPL:
+                {
+                    byte address = IM(cycles, memory);
+                    bool condition = (N == 0);
+                    Branch(address, cycles, condition);
+                } break;
+
+                case BVC:
+                {
+                    byte address = IM(cycles, memory);
+                    bool condition = (V == 0);
+                    Branch(address, cycles, condition);
+                } break;
+
+                case BVS:
+                {
+                    byte address = IM(cycles, memory);
+                    bool condition = (V == 1);
+                    Branch(address, cycles, condition);
+                } break;
+
+                // BIT
+
+                case BIT_ZP:
+                {
+                    byte operand = ZP(cycles, memory);
+                    BIT(operand, cycles);
+                } break;
+
+                case BIT_AB:
+                {
+                    byte operand = AB(cycles, memory);
+                    BIT(operand, cycles);
+                } break;
+
+                // BRK
+
+                case BRK:
+                {
+                    I = 1;
+                    SP++;
+                    cycles--;
+                    memory.WriteByte(cycles, SP, (byte)((PC >> 8) & 0xFF));
+                    SP++;
+                    cycles--;
+                    memory.WriteByte(cycles, SP, (byte)(PC & 0xFF00));
+                    SP++;
+                    cycles--;
+                    byte flags =
+                    ((C << 7) & 0x80)  | ((Z << 6) & 0x40) |
+                    ((I << 5) & 0x20)  | ((D << 4) & 0x10) |
+                    ((B << 3) & 0x08)  | ((V << 2) & 0x40) |
+                    ((N << 1) & 0x02)  | ((0) & 0x0);
+                    memory.WriteByte(cycles, SP, flags);
                 } break;
 
                 // LDA
