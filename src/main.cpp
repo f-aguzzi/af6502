@@ -160,7 +160,7 @@ struct CPU
         return ReadByte(cycles, full_address, memory);
     }
 
-    // Generic sum operation
+    // Generic ADC operation
     void ADC(byte operand)
     {
         hword temp = (hword)operand + (hword)A;
@@ -177,6 +177,32 @@ struct CPU
         A = temp & 0x00FF;
     }
     
+    // Generic AND operation
+    void AND(byte operand)
+    {
+        A = A & operand;
+        if ((A & 0x00ff) == 0)
+        {
+            Z = 1;
+        }
+        N = A & 0x80;
+    }
+
+    // Generic ASL operation
+    void ASL(byte operand)
+    {
+        hword temp = (hword)operand << 1;
+        if (temp > 255)
+        {
+            C = 1;
+        }
+        if ((temp & 0x00ff) == 0)
+        {
+            Z = 1;
+        }
+        N = temp & 0x80;
+        A = temp & 0x00FF;
+    }
 
     // **** Opcodes ****
     // ADC
@@ -188,7 +214,21 @@ struct CPU
     static constexpr byte ADC_AY = 0x79;    // Absolute, Y
     static constexpr byte ADC_IX = 0x61;    // (Indirect, X)
     static constexpr byte ADC_IY = 0x71;    // (Indirect), Y
-
+    // AND
+    static constexpr byte AND_IM = 0x29;    // Immediate
+    static constexpr byte AND_ZP = 0x25;    // Zeropage
+    static constexpr byte AND_ZX = 0x35;    // Zeropage, X
+    static constexpr byte AND_AB = 0x2D;    // Absolute
+    static constexpr byte AND_AX = 0x3D;    // Absolute, X
+    static constexpr byte AND_AY = 0x39;    // Absolute, Y
+    static constexpr byte AND_IX = 0x21;    // (Indirect, X)
+    static constexpr byte AND_IY = 0x31;    // (Indirect), Y
+    // ASL
+    static constexpr byte ASL_AC = 0x0A;    // Accumulator
+    static constexpr byte ASL_ZP = 0x06;    // Zeropage
+    static constexpr byte ASL_ZX = 0x16;    // Zeropage, X
+    static constexpr byte ASL_AB = 0x0E;    // Absolute
+    static constexpr byte ASL_AX = 0x1E;    // Absolute, X
     // LDA
     static constexpr byte LDA_IM = 0xA9;    // Immediate
     static constexpr byte LDA_ZP = 0xA5;    // Zeropage
@@ -260,6 +300,86 @@ struct CPU
                     ADC(operand);
                 } break;
 
+                // AND
+
+                case AND_IM:
+                {
+                    byte operand = IM(cycles, memory);
+                    AND(operand);
+                } break;
+
+                case AND_ZP:
+                {
+                    byte operand = ZP(cycles, memory);
+                    AND(operand);
+                } break;
+
+                case AND_ZX:
+                {
+                    byte operand = ZX(cycles, memory);
+                    AND(operand);
+                } break;
+
+                case AND_AB:
+                {
+                    byte operand = AB(cycles, memory);
+                    AND(operand);
+                } break;
+
+                case AND_AX:
+                {
+                    byte operand = AX(cycles, memory);
+                    AND(operand);
+                } break;
+
+                case AND_AY:
+                {
+                    byte operand = AY(cycles, memory);
+                    AND(operand);
+                } break;
+
+                case AND_IX:
+                { 
+                    byte operand = IX(cycles, memory);
+                    AND(operand);
+                } break;
+
+                case AND_IY:
+                {
+                    byte operand = IY(cycles, memory);
+                    AND(operand);
+                } break;
+
+                // ASL
+
+                case ASL_AC:
+                {
+                    ASL(A);
+                } break;
+
+                case ASL_ZP:
+                {
+                    byte operand = ZP(cycles, memory);
+                    ASL(operand);
+                } break;
+
+                case ASL_ZX:
+                {
+                    byte operand = ZX(cycles, memory);
+                    ASL(operand);
+                } break;
+
+                case ASL_AB:
+                {
+                    byte operand = AB(cycles, memory);
+                    ASL(operand);
+                } break;
+
+                case ASL_AX:
+                {
+                    byte operand = AB(cycles, memory);
+                    ASL(operand);
+                } break;
 
                 // LDA
 
