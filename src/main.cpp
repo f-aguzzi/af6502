@@ -227,6 +227,29 @@ struct CPU
         Z = operand && A;
     }
 
+    // Generic CMP operation
+    void CMP(byte operand)
+    {
+        hword temp = (hword)A - (hword)operand;
+        if (temp < 0)
+        {
+            Z = 0;
+            C = 0;
+            N = (temp >> 7) & 0x1;
+        }
+        if (temp == 0)
+        {
+            Z = 1;
+            C = 1;
+            N = 0;
+        }
+        if (temp > 0)
+        {
+            Z = 0;
+            C = 1;
+        }
+    }
+
     // **** Opcodes ****
     // ADC
     static constexpr byte ADC_IM = 0x69;    // Immediate
@@ -266,6 +289,20 @@ struct CPU
     static constexpr byte BIT_AB = 0x2C;   // absolute
     // BRK
     static constexpr byte BRK = 0x00;   // Implied
+    // Clears
+    static constexpr byte CLC = 0x18;   // Implied
+    static constexpr byte CLD = 0xD8;   // Implied
+    static constexpr byte CLI = 0x58;   // Implied
+    static constexpr byte CLV = 0xB8;   // Implied
+    // CMP
+    static constexpr byte CMP_IM = 0xC9;    // Immediate
+    static constexpr byte CMP_ZP = 0xC5;    // Zeropage
+    static constexpr byte CMP_ZX = 0xD5;    // Zeropage, X
+    static constexpr byte CMP_AB = 0xCD;    // Absolute
+    static constexpr byte CMP_AX = 0xDD;    // Absolute, X
+    static constexpr byte CMP_AY = 0xD9;    // Absolute, Y
+    static constexpr byte CMP_IX = 0xC1;    // (Indirect, X)
+    static constexpr byte CMP_IY = 0xD1;    // (Indirect), Y
     // LDA
     static constexpr byte LDA_IM = 0xA9;    // Immediate
     static constexpr byte LDA_ZP = 0xA5;    // Zeropage
@@ -509,6 +546,81 @@ struct CPU
                     ((B << 3) & 0x08)  | ((V << 2) & 0x40) |
                     ((N << 1) & 0x02)  | ((0) & 0x0);
                     memory.WriteByte(cycles, SP, flags);
+                } break;
+
+                // Clear
+                case CLC:
+                {
+                    cycles--;
+                    C = 0;
+                } break;
+
+                case CLD:
+                {
+                    cycles--;
+                    D = 0;
+                } break;
+
+                case CLI:
+                {
+                    cycles--;
+                    I = 0;
+                } break;
+
+                case CLV:
+                {
+                    cycles--;
+                    V = 0;
+                } break;
+
+                // CMP
+
+                case CMP_IM:
+                {
+                    byte operand = IM(cycles, memory);
+                    CMP(operand);
+                } break;
+
+                case CMP_ZP:
+                {
+                    byte operand = ZP(cycles, memory);
+                    CMP(operand);
+                } break;
+
+                case CMP_ZX:
+                {
+                    byte operand = ZX(cycles, memory);
+                    CMP(operand);
+                } break;
+
+                case CMP_AB:
+                {
+                    byte operand = AB(cycles, memory);
+                    CMP(operand);
+                } break;
+
+                case CMP_AX:
+                {
+                    byte operand = AX(cycles, memory);
+                    CMP(operand);
+                } break;
+
+                case CMP_AY:
+                {
+                    byte operand = AY(cycles, memory);
+                    CMP(operand);
+                } break;
+
+                case CMP_IX:
+                {
+                    byte operand = IX(cycles, memory);
+                    CMP(operand);
+                } break;
+
+                case CMP_IY:
+                {
+                    byte operand = IY(cycles, memory);
+                    CMP(operand);
                 } break;
 
                 // LDA
