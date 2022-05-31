@@ -81,3 +81,23 @@ Uses implied addressing.
 |:---------:|:---------:|
 | BRK       | 0x00      |
 
+## Clear instructions
+All use implied addressing.
+| Mnemonic                              | Opcode    |
+|:-------------------------------------:|:---------:|
+| CLC (clear carry flag)                | 0x18      |
+| CLD (clear decimal mode)              | 0xD8      |
+| CLI (clear interrupt disable bit)     | 0x58      |
+| CLV (clear overflow flag)             | 0xB8      |
+
+## Compare memory with accumulator (CMP)
+| Mnemonic          | Opcode    |
+|:-----------------:|:---------:|
+| CMP (immediate)   | 0xC9      |
+| CMP (zeropage)    | 0xC5      |
+| CMP (zeropage, X) | 0xD5      |
+| CMP (absolute)    | 0xCD      |
+| CMP (absolute, X) | 0xDD      |
+| CMP (absolute, Y) | 0xD9      |
+| CMP (indirect, X) | 0xC1      |
+| CMP (indirect), Y | 0xD1      |
