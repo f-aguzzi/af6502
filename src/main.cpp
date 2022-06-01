@@ -1,5 +1,6 @@
 #include <algorithm>
 #include <array>
+#include <cstdio>
 
 using byte = unsigned char;
 using hword = unsigned short;
@@ -171,6 +172,67 @@ struct CPU
         return ReadByte(full_address);
     }
 
+    // **** Write addressing ****
+
+    // Zeropage address
+    byte ZP_A()
+    {
+        return FetchInstruction();
+    }
+
+    // Zeropage, X address
+    byte ZX_A()
+    {
+        cycles--;
+        return FetchInstruction() + X;
+    }
+
+    // Absolute address
+    hword AB_A()
+    {
+        byte address = FetchInstruction();
+        byte address_2 = FetchInstruction();
+        return ((hword)address_2 << 8) | (hword)address;
+    }
+
+    // Absolute, X address
+    hword AX_A()
+    {
+        byte address = FetchInstruction();
+        byte address_2 = FetchInstruction();
+        return (((hword)address_2 << 8) | (hword)address) + X;
+    }
+
+    // Absolute, Y address
+    hword AY_A()
+    {
+        byte address = FetchInstruction();
+        byte address_2 = FetchInstruction();
+        return (((hword)address_2 << 8) | (hword)address) + Y;
+    }
+
+    // (Indirect, X) address
+    hword IX_A()
+    {
+        byte imm_address = FetchInstruction() + X;
+        cycles--;
+        byte address = ReadByte(imm_address);
+        byte address_2 = ReadByte(++imm_address);
+        return (((hword)address_2 << 8) | (hword)address);
+    }
+
+    // (Indirect), Y address
+    hword IY_A()
+    {
+        byte imm_address = FetchInstruction();
+        byte address = ReadByte(imm_address);
+        byte address_2 = ReadByte(++imm_address);
+        cycles--;
+        return ((((hword)address_2 << 8) | (hword)address)) + Y;
+    }
+
+    // **** Generic Operations ****
+
     // Generic ADC operation
     void ADC(byte operand)
     {
@@ -238,10 +300,10 @@ struct CPU
         Z = operand && A;
     }
 
-    // Generic CMP operation
-    void CMP(byte operand)
+    // Generic compare operation
+    void Compare(byte &reg, byte operand)
     {
-        hword temp = (hword)A - (hword)operand;
+        hword temp = (hword)reg - (hword)operand;
         if (temp < 0)
         {
             Z = 0;
@@ -259,6 +321,102 @@ struct CPU
             Z = 0;
             C = 1;
         }
+    }
+
+    // Generic CMP operation
+    void CMP(byte operand)
+    {
+        Compare(A, operand);
+    }
+
+    // Generic CPX operation
+    void CPX(byte operand)
+    {
+        Compare(X, operand);
+    }
+
+    // Generic CPY operation
+    void CPY(byte operand)
+    {
+        Compare(Y, operand);
+    }
+
+    // Generic DEC operation
+    void DEC(byte operand, hword address)
+    {
+        hword temp = (hword)operand--;
+        cycles--;
+        if (temp > 255)
+        {
+            C = 1;
+        }
+        if ((temp & 0x00ff) == 0)
+        {
+            Z = 1;
+        }
+        N = temp & 0x80;
+        cycles--;
+        memory.WriteByte(cycles, address, temp & 0x00FF);
+    }
+
+    // Generic register decrement
+    void Decrement(byte &reg)
+    {
+        reg--;
+        if ((reg & 0x00ff) == 0)
+        {
+            Z = 1;
+        }
+        N = reg & 0x80;
+        cycles--;
+    }
+
+    // Generic EOR operation
+    void EOR(byte operand)
+    {
+        byte temp = A ^ operand;
+        if ((temp & 0x00ff) == 0)
+        {
+            Z = 1;
+        }
+        N = temp & 0x80;
+        A = temp;
+    }
+
+    // Generic INC operation
+    void INC(byte operand, hword address)
+    {
+        hword temp = (hword)operand + 1;
+        cycles--;
+        if (temp > 255)
+        {
+            C = 1;
+        }
+        if ((temp & 0x00ff) == 0)
+        {
+            Z = 1;
+        }
+        N = temp & 0x80;
+        cycles--;
+        memory.WriteByte(cycles, address, temp & 0x00FF);
+    }
+
+    // Generic register increment
+    void Increment(byte &reg)
+    {
+        reg++;
+        if ((reg & 0x00ff) == 0)
+        {
+            Z = 1;
+        }
+        N = reg & 0x80;
+        cycles--;
+    }
+
+    // Generic STA operation
+    void STA(hword address)
+    {
+        memory.WriteByte(cycles, address, A);
     }
 
     // **** Opcodes ****
@@ -314,6 +472,39 @@ struct CPU
     static constexpr byte CMP_AY = 0xD9;    // Absolute, Y
     static constexpr byte CMP_IX = 0xC1;    // (Indirect, X)
     static constexpr byte CMP_IY = 0xD1;    // (Indirect), Y
+    // CPX
+    static constexpr byte CPX_IM = 0xE0;    // Immediate
+    static constexpr byte CPX_ZP = 0xE4;    // Zeropage
+    static constexpr byte CPX_AB = 0xEC;    // Absolute
+    // CPY
+    static constexpr byte CPY_IM = 0xC0;    // Immediate
+    static constexpr byte CPY_ZP = 0xC4;    // Zeropage
+    static constexpr byte CPY_AB = 0xCC;    // Absolute
+    // DEC
+    static constexpr byte DEC_ZP = 0xC6;    // Zeropage
+    static constexpr byte DEC_ZX = 0xD6;    // Zeropage, X
+    static constexpr byte DEC_AB = 0xCE;    // Absolute
+    static constexpr byte DEC_AX = 0xDE;    // Absolute, X
+    // Decrement index
+    static constexpr byte DEX = 0xCA;   // Implied
+    static constexpr byte DEY = 0x88;   // Implied
+    // EOR
+    static constexpr byte EOR_IM = 0x49;    // Immediate
+    static constexpr byte EOR_ZP = 0x45;    // Zeropage
+    static constexpr byte EOR_ZX = 0x55;    // Zeropage, X
+    static constexpr byte EOR_AB = 0x4D;    // Absolute
+    static constexpr byte EOR_AX = 0x5D;    // Absolute, X
+    static constexpr byte EOR_AY = 0x59;    // Absolute, Y
+    static constexpr byte EOR_IX = 0x41;    // (Indirect, X)
+    static constexpr byte EOR_IY = 0x51;    // (Indirect), Y
+    // INC
+    static constexpr byte INC_ZP = 0xE6;    // Zeropage
+    static constexpr byte INC_ZX = 0xF6;    // Zeropage, X
+    static constexpr byte INC_AB = 0xEE;    // Absolute
+    static constexpr byte INC_AX = 0xFE;    // Absolute, X
+    // Increment index
+    static constexpr byte INX = 0xE8;   // Implied
+    static constexpr byte INY = 0xC8;   // Implied
     // LDA
     static constexpr byte LDA_IM = 0xA9;    // Immediate
     static constexpr byte LDA_ZP = 0xA5;    // Zeropage
@@ -328,9 +519,18 @@ struct CPU
     static constexpr byte JMP_IN = 0x6C;    // Indirect jump
     // JSR
     static constexpr byte JSR = 0x20;   // Jump, save original location
+    // STA
+    static constexpr byte STA_ZP = 0x85;    // Zeropage
+    static constexpr byte STA_ZX = 0x95;    // Zeropage, X
+    static constexpr byte STA_AB = 0x8D;    // Absolute
+    static constexpr byte STA_AX = 0x9D;    // Absolute, X
+    static constexpr byte STA_AY = 0x99;    // Absolute, Y
+    static constexpr byte STA_IX = 0x81;    // (Indirect, X)
+    static constexpr byte STA_IY = 0x91;    // (Indirect), Y
 
-    void execute(word &cycles, Memory &memory)
+    void execute(hword init_addr)
     {
+        PC = init_addr;
         while (cycles > 0)
         {
             byte instruction = FetchInstruction();
@@ -540,6 +740,7 @@ struct CPU
 
                 // BRK
 
+                /*
                 case BRK:
                 {
                     I = 1;
@@ -558,6 +759,8 @@ struct CPU
                     ((N << 1) & 0x02)  | ((0) & 0x0);
                     memory.WriteByte(cycles, SP, flags);
                 } break;
+
+                */
 
                 // Clear
                 case CLC:
@@ -634,6 +837,225 @@ struct CPU
                     CMP(operand);
                 } break;
 
+                // CPX
+
+                case CPX_IM:
+                {
+                    byte operand = IM();
+                    CPX(operand);
+                } break;
+
+                case CPX_ZP:
+                {
+                    byte operand = ZP();
+                    CPX(operand);
+                } break;
+
+                case CPX_AB:
+                {
+                    byte operand = AB();
+                    CPX(operand);
+                } break;
+
+                // CPY  
+
+                case CPY_IM:
+                {
+                    byte operand = IM();
+                    CPY(operand);
+                } break;
+
+                case CPY_ZP:
+                {
+                    byte operand = ZP();
+                    CPY(operand);
+                } break;
+
+                case CPY_AB:
+                {
+                    byte operand = AB();
+                    CPY(operand);
+                } break;
+
+                // DEC
+
+                case DEC_ZP:
+                {
+                    byte operand = ZP();
+                    byte address = memory.Mem[PC];
+                    DEC(operand, address);
+                } break;
+
+                case DEC_ZX:
+                {
+                    byte operand = ZX();
+                    hword address = memory.Mem[PC] + X;
+                    DEC(operand, address);
+                } break;
+
+                case DEC_AB:
+                {
+                    byte operand = AB();
+                    byte address = memory.Mem[PC];
+                    byte address_2 = memory.Mem[PC + 1];
+                    hword full_address = (hword)address | (hword)(address_2 << 8);
+                    DEC(operand, full_address);
+                } break;
+
+                case DEC_AX:
+                {
+                    byte operand = AB();
+                    byte address = memory.Mem[PC];
+                    byte address_2 = memory.Mem[PC + 1];
+                    hword full_address = (hword)address | (hword)(address_2 << 8) + X;
+                    DEC(operand, full_address);
+                } break;
+
+                // Decrement index
+
+                case DEX:
+                {
+                    Decrement(X);
+                } break;
+
+                case DEY:
+                {
+                    Decrement(Y);
+                } break;
+
+                // EOR
+
+                case EOR_IM:
+                {
+                    byte operand = IM();
+                    EOR(operand);
+                } break;
+
+                case EOR_ZP:
+                {
+                    byte operand = ZP();
+                    EOR(operand);
+                } break;
+
+                case EOR_ZX:
+                {
+                    byte operand = ZX();
+                    EOR(operand);
+                } break;
+
+                case EOR_AB:
+                {
+                    byte operand = AB();
+                    EOR(operand);
+                } break;
+
+                case EOR_AX:
+                {
+                    byte operand = AX();
+                    EOR(operand);
+                } break;
+
+                case EOR_AY:
+                {
+                    byte operand = AY();
+                    EOR(operand);
+                } break;
+
+                case EOR_IX:
+                {
+                    byte operand = IX();
+                    EOR(operand);
+                } break;
+
+                case EOR_IY:
+                {
+                    byte operand = IY();
+                    EOR(operand);
+                } break;
+
+                // INC
+
+                case INC_ZP:
+                {
+                    byte operand = ZP();
+                    byte address = memory.Mem[PC - 1];
+                    INC(operand, address);
+                } break;
+
+                case INC_ZX:
+                {
+                    byte operand = ZX();
+                    hword address = memory.Mem[PC - 1] + X;
+                    INC(operand, address);
+                } break;
+
+                case INC_AB:
+                {
+                    byte operand = AB();
+                    byte address = memory.Mem[PC - 1];
+                    byte address_2 = memory.Mem[PC];
+                    hword full_address = (hword)address | (hword)(address_2 << 8);
+                    INC(operand, full_address);
+                } break;
+
+                case INC_AX:
+                {
+                    byte operand = AB();
+                    byte address = memory.Mem[PC - 1];
+                    byte address_2 = memory.Mem[PC];
+                    hword full_address = (hword)address | (hword)(address_2 << 8) + X;
+                    INC(operand, full_address);
+                } break;
+
+                // Increment index
+
+                case INX:
+                {
+                    Increment(X);
+                } break;
+
+                case INY:
+                {
+                    Increment(Y);
+                } break;
+
+                // JMP
+
+                case JMP_AB:
+                {
+                    byte address = FetchInstruction();
+                    byte address_2 = FetchInstruction();
+                    hword full_address = ((hword)address_2 << 8) | (hword)address;
+                    PC = full_address;
+                } break;
+
+                case JMP_IN:
+                {
+                    byte address = FetchInstruction();
+                    byte address_2 = FetchInstruction();
+                    hword full_address = ((hword)address_2 << 8) | (hword)address;
+                    byte jmp_byte = ReadByte(full_address);
+                    full_address++;
+                    byte jmp_byte_2 = ReadByte(full_address);
+                    PC = ((hword)jmp_byte << 8) || (hword)jmp_byte_2;
+                } break;
+
+                // JSR
+
+                case JSR:
+                {
+                    SP++;
+                    cycles--;
+                    byte PC_1 = (byte)((PC >> 8) & 0xFF00);
+                    byte PC_2 = (byte)(PC & 0xFF);
+                    memory.WriteByte(cycles, SP, PC_1);
+                    memory.WriteByte(cycles, SP + 1, PC_2);
+                    byte address = FetchInstruction();
+                    byte address_2 = FetchInstruction();
+                    hword full_address = ((hword)address_2 << 8) | (hword)address;
+                    PC = full_address;
+                } break;
+
                 // LDA
 
                 case LDA_IM:
@@ -692,46 +1114,55 @@ struct CPU
                     N = (A & 0b10000000) > 0;
                 } break;
 
-                // JMP
+                // STA
 
-                case JMP_AB:
+                case STA_ZP:
                 {
-                    byte address = FetchInstruction();
-                    byte address_2 = FetchInstruction();
-                    hword full_address = ((hword)address_2 << 8) | (hword)address;
-                    PC = full_address;
+                    byte address = ZP_A();
+                    STA(address);
                 } break;
 
-                case JMP_IN:
+                case STA_ZX:
                 {
-                    byte address = FetchInstruction();
-                    byte address_2 = FetchInstruction();
-                    hword full_address = ((hword)address_2 << 8) | (hword)address;
-                    byte jmp_byte = ReadByte(full_address);
-                    full_address++;
-                    byte jmp_byte_2 = ReadByte(full_address);
-                    PC = ((hword)jmp_byte << 8) || (hword)jmp_byte_2;
+                    byte address = ZX_A();
+                    STA(address);
                 } break;
 
-                // JSR
-
-                case JSR:
+                case STA_AB:
                 {
-                    SP++;
-                    cycles--;
-                    byte PC_1 = (byte)((PC >> 8) & 0xFF00);
-                    byte PC_2 = (byte)(PC & 0xFF);
-                    memory.WriteByte(cycles, SP, PC_1);
-                    memory.WriteByte(cycles, SP + 1, PC_2);
-                    byte address = FetchInstruction();
-                    byte address_2 = FetchInstruction();
-                    hword full_address = ((hword)address_2 << 8) | (hword)address;
-                    PC = full_address;
+                    byte address = AB_A();
+                    STA(address);
+                } break;
+
+                case STA_AX:
+                {
+                    hword address = AX_A();
+                    STA(address);
+                } break;
+
+                case STA_AY:
+                {
+                    hword address = AY_A();
+                    STA(address);
+                } break;
+
+                case STA_IX:
+                {
+                    hword address = IX_A();
+                    STA(address);
+                } break;
+
+                case STA_IY:
+                {
+                    hword address = IY_A();
+                    STA(address);
                 } break;
 
                 default:
                 {
-                    PC++;
+                    // PC++;
+                    cycles = 0;
+                    break;
                 }
             }
         }
@@ -741,7 +1172,35 @@ struct CPU
 
 int main()
 {
-    CPU cpu(20);
+
+    CPU cpu(40);
+    
+    // hard-coded text program: 2+2 and store result
+
+    // Increment 0x00 by 1
+    cpu.memory.Mem[0xFFC + 0] = 0xE6;
+    cpu.memory.Mem[0xFFC + 1] = 0x00;
+    // Increment 0x00 by 1
+    cpu.memory.Mem[0xFFC + 2] = 0xE6;
+    cpu.memory.Mem[0xFFC + 3] = 0x00;
+    // Load 2 into accumulator
+    cpu.memory.Mem[0xFFC + 4] = 0xA9;
+    cpu.memory.Mem[0xFFC + 5] = 0x02;
+    // Sum accumulator with 0x00
+    cpu.memory.Mem[0xFFC + 6] = 0x65;
+    cpu.memory.Mem[0xFFC + 7] = 0x00;
+    // Store result in 0x00
+    cpu.memory.Mem[0xFFC + 8] = 0x85;
+    cpu.memory.Mem[0xFFC + 9] = 0x00;
+
+
+    
+    cpu.execute(0xFFC);
+
+ 
+    std::printf("A: %d \n", (int)cpu.A);
+    std::printf("mem(0): %d \n", (int)cpu.memory.Mem[0]);
+    
 
     return 0;
 }
