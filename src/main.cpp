@@ -1,3 +1,6 @@
+#include <algorithm>
+#include <array>
+
 using byte = unsigned char;
 using hword = unsigned short;
 using word = unsigned int;
@@ -5,14 +8,12 @@ using word = unsigned int;
 struct Memory
 {
     static constexpr word MEM_SIZE = 1024 * 64;
-    byte Mem[MEM_SIZE];
+    std::array<byte, MEM_SIZE> Mem;
 
     void init()
     {
-        for (word i = 0; i < MEM_SIZE; i++)
-        {
-            Mem[i] = 0;
-        }
+        auto make_zero = [&](byte &b) { b = 0; };
+        std::for_each(Mem.begin(), Mem.end(), make_zero);
     }
 
     byte operator[](word address) const
@@ -43,6 +44,16 @@ struct CPU
     byte V : 1; // overflow flag
     byte N : 1; // negative flag
 
+    Memory memory;
+    word cycles;
+
+    CPU(word n_cycles)
+    {
+        cycles = n_cycles;
+        memory.init();
+        reset();
+    }
+
     void reset()
     {
         // Reset PC and SP to default values
@@ -55,7 +66,7 @@ struct CPU
     }
 
     // Load instruction from memory
-    byte FetchInstruction(word cycles, Memory &memory)
+    byte FetchInstruction()
     {
         cycles--;
         byte temp = memory[PC];
@@ -64,14 +75,14 @@ struct CPU
     }
 
     // Byte fetch, zeropage
-    byte ReadByte(word cycles, byte address, Memory &memory)
+    byte ReadByte(byte address)
     {
         cycles--;
         return memory[address];
     }
 
     // Byte fetch, absolute
-    byte ReadByte(word cycles, hword address, Memory &memory)
+    byte ReadByte(hword address)
     {
         cycles--;
         return memory[address];
@@ -80,84 +91,84 @@ struct CPU
     // **** Addressing modes ****
 
     // Immediate addressing
-    byte IM(word cycles, Memory memory)
+    byte IM()
     {
-        return FetchInstruction(cycles, memory);
+        return FetchInstruction();
     }
 
     // Zeropage addressing
-    byte ZP(word cycles, Memory memory)
+    byte ZP()
     {
-        byte address = FetchInstruction(cycles, memory);
-        return ReadByte(cycles, address, memory);
+        byte address = FetchInstruction();
+        return ReadByte(address);
     }
 
     // Zeropage, X addressing
-    byte ZX(word cycles, Memory memory)
+    byte ZX()
     {
-        byte address = FetchInstruction(cycles, memory) + X;
+        byte address = FetchInstruction() + X;
         cycles--;
-        return ReadByte(cycles, address, memory);
+        return ReadByte(address);
     }
 
     // Absolute addressing
-    byte AB(word cycles, Memory memory)
+    byte AB()
     {
-        byte address = FetchInstruction(cycles, memory);
-        byte address_2 = FetchInstruction(cycles, memory);
+        byte address = FetchInstruction();
+        byte address_2 = FetchInstruction();
         hword full_address = (hword)address | (hword)(address_2 << 8);
-        return ReadByte(cycles, full_address, memory);
+        return ReadByte(full_address);
     }
 
     // Absolute, X addressing
-    byte AX(word cycles, Memory memory)
+    byte AX()
     {
-        byte address = FetchInstruction(cycles, memory);
-        byte address_2 = FetchInstruction(cycles, memory);
+        byte address = FetchInstruction();
+        byte address_2 = FetchInstruction();
         hword full_address = (hword)address | (hword)(address_2 << 8) + X;
         if ((full_address & 0xFF00) != (PC & 0xFF00))
         {
             cycles--;
         }
-        return ReadByte(cycles, full_address, memory);
+        return ReadByte(full_address);
     }
 
     // Absolute, Y addressing
-    byte AY(word cycles, Memory memory)
+    byte AY()
     {
-        byte address = FetchInstruction(cycles, memory);
-        byte address_2 = FetchInstruction(cycles, memory);
+        byte address = FetchInstruction();
+        byte address_2 = FetchInstruction();
         hword full_address = (hword)address | (hword)(address_2 << 8) + Y;
         if ((full_address & 0xFF00) != (PC & 0xFF00))
         {
             cycles--;
         }
-        return ReadByte(cycles, full_address, memory);
+        return ReadByte(full_address);
     }
 
     // (Indirect, X) addressing
-    byte IX(word cycles, Memory memory)
+    byte IX()
     {
-        byte imm_address = FetchInstruction(cycles, memory) + X;
+        byte imm_address = FetchInstruction() + X;
         cycles--;
-        byte address = ReadByte(cycles, imm_address, memory);
-        byte address_2 = ReadByte(cycles, ++imm_address, memory);
+        byte address = ReadByte(imm_address);
+        byte address_2 = ReadByte(++imm_address);
         hword full_address = (((hword)address_2 << 8) | (hword)address);
-        return ReadByte(cycles, full_address, memory);
+        return ReadByte(full_address);
     }
 
     // (Indirect), Y addressing
-    byte IY(word cycles, Memory memory)
+    byte IY()
     {
-        byte imm_address = FetchInstruction(cycles, memory);
-        byte address = ReadByte(cycles, imm_address, memory);
-        byte address_2 = ReadByte(cycles, ++imm_address, memory);
+        byte imm_address = FetchInstruction();
+        byte address = ReadByte(imm_address);
+        byte address_2 = ReadByte(++imm_address);
         hword full_address = (((hword)address_2 << 8) | (hword)address) + Y;
         if ((full_address & 0xFF00) != (PC & 0xFF00))
         {
             cycles--;
         }
-        return ReadByte(cycles, full_address, memory);
+        return ReadByte(full_address);
     }
 
     // Generic ADC operation
@@ -205,7 +216,7 @@ struct CPU
     }
 
     // Generic branch operation
-    void Branch(byte address, word &cycles, bool condition)
+    void Branch(byte address, bool condition)
     {
         word page = PC % 256;
         if (condition)
@@ -219,7 +230,7 @@ struct CPU
     }
 
     // Generic BIT operation
-    void BIT(byte operand, word &cycles)
+    void BIT(byte operand)
     {
         cycles -= 2;
         N = operand & 0x2;
@@ -322,55 +333,55 @@ struct CPU
     {
         while (cycles > 0)
         {
-            byte instruction = FetchInstruction(cycles, memory);
+            byte instruction = FetchInstruction();
 
             switch (instruction)
             {
                 case ADC_IM:
                 {
-                    byte operand = IM(cycles, memory);
+                    byte operand = IM();
                     ADC(operand);
                 } break;
 
                 case ADC_ZP:
                 {
-                    byte operand = ZP(cycles, memory);
+                    byte operand = ZP();
                     ADC(operand);
                 } break;
 
                 case ADC_ZX:
                 {
-                    byte operand = ZX(cycles, memory);
+                    byte operand = ZX();
                     ADC(operand);
                 } break;
 
                 case ADC_AB:
                 {
-                    byte operand = AB(cycles, memory);
+                    byte operand = AB();
                     ADC(operand);
                 } break;
 
                 case ADC_AX:
                 {
-                    byte operand = AX(cycles, memory);
+                    byte operand = AX();
                     ADC(operand);
                 } break;
 
                 case ADC_AY:
                 {
-                    byte operand = AY(cycles, memory);
+                    byte operand = AY();
                     ADC(operand);
                 } break;
 
                 case ADC_IX:
                 { 
-                    byte operand = IX(cycles, memory);
+                    byte operand = IX();
                     ADC(operand);
                 } break;
 
                 case ADC_IY:
                 {
-                    byte operand = IY(cycles, memory);
+                    byte operand = IY();
                     ADC(operand);
                 } break;
 
@@ -378,49 +389,49 @@ struct CPU
 
                 case AND_IM:
                 {
-                    byte operand = IM(cycles, memory);
+                    byte operand = IM();
                     AND(operand);
                 } break;
 
                 case AND_ZP:
                 {
-                    byte operand = ZP(cycles, memory);
+                    byte operand = ZP();
                     AND(operand);
                 } break;
 
                 case AND_ZX:
                 {
-                    byte operand = ZX(cycles, memory);
+                    byte operand = ZX();
                     AND(operand);
                 } break;
 
                 case AND_AB:
                 {
-                    byte operand = AB(cycles, memory);
+                    byte operand = AB();
                     AND(operand);
                 } break;
 
                 case AND_AX:
                 {
-                    byte operand = AX(cycles, memory);
+                    byte operand = AX();
                     AND(operand);
                 } break;
 
                 case AND_AY:
                 {
-                    byte operand = AY(cycles, memory);
+                    byte operand = AY();
                     AND(operand);
                 } break;
 
                 case AND_IX:
                 { 
-                    byte operand = IX(cycles, memory);
+                    byte operand = IX();
                     AND(operand);
                 } break;
 
                 case AND_IY:
                 {
-                    byte operand = IY(cycles, memory);
+                    byte operand = IY();
                     AND(operand);
                 } break;
 
@@ -433,25 +444,25 @@ struct CPU
 
                 case ASL_ZP:
                 {
-                    byte operand = ZP(cycles, memory);
+                    byte operand = ZP();
                     ASL(operand);
                 } break;
 
                 case ASL_ZX:
                 {
-                    byte operand = ZX(cycles, memory);
+                    byte operand = ZX();
                     ASL(operand);
                 } break;
 
                 case ASL_AB:
                 {
-                    byte operand = AB(cycles, memory);
+                    byte operand = AB();
                     ASL(operand);
                 } break;
 
                 case ASL_AX:
                 {
-                    byte operand = AB(cycles, memory);
+                    byte operand = AB();
                     ASL(operand);
                 } break;
 
@@ -459,72 +470,72 @@ struct CPU
 
                 case BCC:
                 {
-                    byte address = IM(cycles, memory);
+                    byte address = IM();
                     bool condition = (C == 0);
-                    Branch(address, cycles, condition);
+                    Branch(address, condition);
                 } break;
 
                 case BCS:
                 {
-                    byte address = IM(cycles, memory);
+                    byte address = IM();
                     bool condition = (C == 1);
-                    Branch(address, cycles, condition);
+                    Branch(address, condition);
                 } break;
 
                 case BEQ:
                 {
-                    byte address = IM(cycles, memory);
+                    byte address = IM();
                     bool condition = (Z == 1);
-                    Branch(address, cycles, condition);
+                    Branch(address, condition);
                 } break;
 
                 case BMI:
                 {
-                    byte address = IM(cycles, memory);
+                    byte address = IM();
                     bool condition = (N == 1);
-                    Branch(address, cycles, condition);
+                    Branch(address, condition);
                 } break;
                 
                 case BNE:
                 {
-                    byte address = IM(cycles, memory);
+                    byte address = IM();
                     bool condition = (Z == 0);
-                    Branch(address, cycles, condition);
+                    Branch(address, condition);
                 } break;
 
                 case BPL:
                 {
-                    byte address = IM(cycles, memory);
+                    byte address = IM();
                     bool condition = (N == 0);
-                    Branch(address, cycles, condition);
+                    Branch(address, condition);
                 } break;
 
                 case BVC:
                 {
-                    byte address = IM(cycles, memory);
+                    byte address = IM();
                     bool condition = (V == 0);
-                    Branch(address, cycles, condition);
+                    Branch(address, condition);
                 } break;
 
                 case BVS:
                 {
-                    byte address = IM(cycles, memory);
+                    byte address = IM();
                     bool condition = (V == 1);
-                    Branch(address, cycles, condition);
+                    Branch(address, condition);
                 } break;
 
                 // BIT
 
                 case BIT_ZP:
                 {
-                    byte operand = ZP(cycles, memory);
-                    BIT(operand, cycles);
+                    byte operand = ZP();
+                    BIT(operand);
                 } break;
 
                 case BIT_AB:
                 {
-                    byte operand = AB(cycles, memory);
-                    BIT(operand, cycles);
+                    byte operand = AB();
+                    BIT(operand);
                 } break;
 
                 // BRK
@@ -577,49 +588,49 @@ struct CPU
 
                 case CMP_IM:
                 {
-                    byte operand = IM(cycles, memory);
+                    byte operand = IM();
                     CMP(operand);
                 } break;
 
                 case CMP_ZP:
                 {
-                    byte operand = ZP(cycles, memory);
+                    byte operand = ZP();
                     CMP(operand);
                 } break;
 
                 case CMP_ZX:
                 {
-                    byte operand = ZX(cycles, memory);
+                    byte operand = ZX();
                     CMP(operand);
                 } break;
 
                 case CMP_AB:
                 {
-                    byte operand = AB(cycles, memory);
+                    byte operand = AB();
                     CMP(operand);
                 } break;
 
                 case CMP_AX:
                 {
-                    byte operand = AX(cycles, memory);
+                    byte operand = AX();
                     CMP(operand);
                 } break;
 
                 case CMP_AY:
                 {
-                    byte operand = AY(cycles, memory);
+                    byte operand = AY();
                     CMP(operand);
                 } break;
 
                 case CMP_IX:
                 {
-                    byte operand = IX(cycles, memory);
+                    byte operand = IX();
                     CMP(operand);
                 } break;
 
                 case CMP_IY:
                 {
-                    byte operand = IY(cycles, memory);
+                    byte operand = IY();
                     CMP(operand);
                 } break;
 
@@ -627,56 +638,56 @@ struct CPU
 
                 case LDA_IM:
                 {
-                    A = IM(cycles, memory);
+                    A = IM();
                     Z = (A == 0);
                     N = (A & 0b10000000) > 0;
                 } break;
 
                 case LDA_ZP:
                 {
-                    A = ZP(cycles, memory);
+                    A = ZP();
                     Z = (A == 0);
                     N = (A & 0b10000000) > 0;
                 } break;
 
                 case LDA_ZX:
                 {
-                    A = ZX(cycles, memory);
+                    A = ZX();
                     Z = (A == 0);
                     N = (A & 0b10000000) > 0;
                 } break;
 
                 case LDA_AB:
                 {
-                    A = AB(cycles, memory);
+                    A = AB();
                     Z = (A == 0);
                     N = (A & 0b10000000) > 0;
                 } break;
 
                 case LDA_AX:
                 {
-                    A = AX(cycles, memory);
+                    A = AX();
                     Z = (A == 0);
                     N = (A & 0b10000000) > 0;
                 } break;
 
                 case LDA_AY:
                 {
-                    A = AY(cycles, memory);
+                    A = AY();
                     Z = (A == 0);
                     N = (A & 0b10000000) > 0;
                 } break;
 
                 case LDA_IX:
                 {
-                    A = IX(cycles, memory);
+                    A = IX();
                     Z = (A == 0);
                     N = (A & 0b10000000) > 0;
                 } break;
 
                 case LDA_IY:
                 {
-                    A = IY(cycles, memory);
+                    A = IY();
                     Z = (A == 0);
                     N = (A & 0b10000000) > 0;
                 } break;
@@ -685,20 +696,20 @@ struct CPU
 
                 case JMP_AB:
                 {
-                    byte address = FetchInstruction(cycles, memory);
-                    byte address_2 = FetchInstruction(cycles, memory);
+                    byte address = FetchInstruction();
+                    byte address_2 = FetchInstruction();
                     hword full_address = ((hword)address_2 << 8) | (hword)address;
                     PC = full_address;
                 } break;
 
                 case JMP_IN:
                 {
-                    byte address = FetchInstruction(cycles, memory);
-                    byte address_2 = FetchInstruction(cycles, memory);
+                    byte address = FetchInstruction();
+                    byte address_2 = FetchInstruction();
                     hword full_address = ((hword)address_2 << 8) | (hword)address;
-                    byte jmp_byte = ReadByte(cycles, full_address, memory);
+                    byte jmp_byte = ReadByte(full_address);
                     full_address++;
-                    byte jmp_byte_2 = ReadByte(cycles, full_address, memory);
+                    byte jmp_byte_2 = ReadByte(full_address);
                     PC = ((hword)jmp_byte << 8) || (hword)jmp_byte_2;
                 } break;
 
@@ -712,8 +723,8 @@ struct CPU
                     byte PC_2 = (byte)(PC & 0xFF);
                     memory.WriteByte(cycles, SP, PC_1);
                     memory.WriteByte(cycles, SP + 1, PC_2);
-                    byte address = FetchInstruction(cycles, memory);
-                    byte address_2 = FetchInstruction(cycles, memory);
+                    byte address = FetchInstruction();
+                    byte address_2 = FetchInstruction();
                     hword full_address = ((hword)address_2 << 8) | (hword)address;
                     PC = full_address;
                 } break;
@@ -730,8 +741,7 @@ struct CPU
 
 int main()
 {
-    CPU cpu;
-    Memory memory;
+    CPU cpu(20);
 
     return 0;
 }
