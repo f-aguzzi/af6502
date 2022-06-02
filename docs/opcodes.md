@@ -1,28 +1,5 @@
 # Opcodes
 
-## Load accumulator (LDA)
-
-| Mnemonic          | Opcode    |
-|:-----------------:|:---------:|
-| LDA (immediate)   | 0xA9      |
-| LDA (zeropage)    | 0xA5      |
-| LDA (zeropage, X) | 0xB5      |
-| LDA (absolute)    | 0xAD      |
-| LDA (absolute, X) | 0xBD      |
-| LDA (absolute, Y) | 0xB9      |
-
-## Jump (JMP)
-
-| Mnemonic          | Opcode    |
-|:-----------------:|:---------:|
-| JMP (absolute)    | 0x4C      |
-| JMP (indirect)    | 0x6C      |
-
-## Jump and save return (JSR)
-| Mnemonic          | Opcode    |
-|:-----------------:|:---------:|
-| JSR (absolute)    | 0x20      |
-
 ## Addition with carry (ADC)
 | Mnemonic          | Opcode    |
 |:-----------------:|:---------:|
@@ -101,3 +78,109 @@ All use implied addressing.
 | CMP (absolute, Y) | 0xD9      |
 | CMP (indirect, X) | 0xC1      |
 | CMP (indirect), Y | 0xD1      |
+
+## Compare Memory and Index X (CPX)
+| Mnemonic          | Opcode    |
+|:-----------------:|:---------:|
+| CPX (immediate)   | 0xE0      |
+| CPX (zeropage)    | 0xE4      |
+| CPX (absolute)    | 0xEC      |
+
+## Compare Memory and Index Y (CPY)
+| Mnemonic          | Opcode    |
+|:-----------------:|:---------:|
+| CPY (immediate)   | 0xC0      |
+| CPY (zeropage)    | 0xC4      |
+| CPY (absolute)    | 0xCC      |
+
+## Decrement Memory by One (DEC)
+ Mnemonic          | Opcode    |
+|:-----------------:|:---------:|
+| DEC (zeropage)    | 0xC6      |
+| DEC (zeropage, X) | 0xD6      |
+| DEC (absolute)    | 0xCE      |
+| DEC (absolute, X) | 0xDE      |
+
+## Decrement Index by One
+Both use implied addressing.
+| Mnemonic  | Opcode    |
+|:---------:|:---------:|
+| DEX       | 0xCA      |
+| DEY       | 0x88      |
+
+## Exclusive OR (EOR)
+| Mnemonic          | Opcode    |
+|:-----------------:|:---------:|
+| EOR (immediate)   | 0x49      |
+| EOR (zeropage)    | 0x45      |
+| EOR (zeropage, X) | 0x55      |
+| EOR (absolute)    | 0x4D      |
+| EOR (absolute, X) | 0x5D      |
+| EOR (absolute, Y) | 0x59      |
+| EOR (indirect, X) | 0x41      |
+| EOR (indirect), Y | 0x51      |
+
+## Increment Memory by One (INC)
+ Mnemonic          | Opcode    |
+|:-----------------:|:---------:|
+| INC (zeropage)    | 0xE6      |
+| INC (zeropage, X) | 0xF6      |
+| INC (absolute)    | 0xEE      |
+| INC (absolute, X) | 0xFE      |
+
+## Increment Index
+Both use implied addressing.
+| Mnemonic  | Opcode    |
+|:---------:|:---------:|
+| INX       | 0xE8      |
+| INY       | 0xC8      |
+
+## Jump (JMP)
+| Mnemonic          | Opcode    |
+|:-----------------:|:---------:|
+| JMP (absolute)    | 0x4C      |
+| JMP (indirect)    | 0x6C      |
+
+## Jump and save return (JSR)
+| Mnemonic          | Opcode    |
+|:-----------------:|:---------:|
+| JSR (absolute)    | 0x20      |
+
+## Load accumulator (LDA)
+| Mnemonic          | Opcode    |
+|:-----------------:|:---------:|
+| LDA (immediate)   | 0xA9      |
+| LDA (zeropage)    | 0xA5      |
+| LDA (zeropage, X) | 0xB5      |
+| LDA (absolute)    | 0xAD      |
+| LDA (absolute, X) | 0xBD      |
+| LDA (absolute, Y) | 0xB9      |
+
+## Load X (LDX)
+| Mnemonic          | Opcode    |
+|:-----------------:|:---------:|
+| LDX (immediate)   | 0xA2      |
+| LDX (zeropage)    | 0xA6      |
+| LDX (zeropage, Y) | 0xB6      |
+| LDX (absolute)    | 0xAE      |
+| LDX (absolute, Y) | 0xBE      |
+
+## Load Y (LDY)
+| Mnemonic          | Opcode    |
+|:-----------------:|:---------:|
+| LDY (immediate)   | 0xA0      |
+| LDY (zeropage)    | 0xA4      |
+| LDY (zeropage, X) | 0xB4      |
+| LDY (absolute)    | 0xAC      |
+| LDY (absolute, X) | 0xBC      |
+
+## Store Accumulator to Memory (STA)
+| Mnemonic          | Opcode    |
+|:-----------------:|:---------:|
+| STA (zeropage)    | 0x85      |
+| STA (zeropage, X) | 0x95      |
+| STA (absolute)    | 0x8D      |
+| STA (absolute, X) | 0x9D      |
+| STA (absolute, Y) | 0x99      |
+| STA (indirect, X) | 0x81      |
+| STA (indirect), Y | 0x91      |

@@ -1,10 +1,15 @@
 #include <algorithm>
 #include <array>
+#include <cstdint>
 #include <cstdio>
+#include <filesystem>
+#include <fstream>
+#include <string>
+#include <vector>
 
-using byte = unsigned char;
-using hword = unsigned short;
-using word = unsigned int;
+using byte = std::uint8_t;
+using hword = std::uint16_t;
+using word = std::uint32_t;
 
 struct Memory
 {
@@ -27,6 +32,17 @@ struct Memory
     {
         cycles--;
         Mem[address] = data;
+    }
+
+    // Write program to memory
+    void WriteProgram(std::vector<byte> program, hword index)
+    {
+        int i = index;
+        for (byte b: program)
+        {
+            Mem[i] = b;
+            i++;
+        }
     }
 };
 
@@ -108,6 +124,14 @@ struct CPU
     byte ZX()
     {
         byte address = FetchInstruction() + X;
+        cycles--;
+        return ReadByte(address);
+    }
+
+    // Zeropage, Y addressing
+    byte ZY()
+    {
+        byte address = FetchInstruction() + Y;
         cycles--;
         return ReadByte(address);
     }
@@ -413,6 +437,28 @@ struct CPU
         cycles--;
     }
 
+    // Generic LD(X-Y) operation
+    void LD(byte &reg, byte operand)
+    {
+        reg = operand;
+    }
+
+    // Generic LSR operation
+    byte LSR(byte operand)
+    {
+        hword temp = (hword)operand << 1;
+        if (temp > 255)
+        {
+            C = 1;
+        }
+        if ((temp & 0x00ff) == 0)
+        {
+            Z = 1;
+        }
+        cycles--;
+        return temp & 0xFF;
+    }
+
     // Generic STA operation
     void STA(hword address)
     {
@@ -505,6 +551,11 @@ struct CPU
     // Increment index
     static constexpr byte INX = 0xE8;   // Implied
     static constexpr byte INY = 0xC8;   // Implied
+    // JMP
+    static constexpr byte JMP_AB = 0x4C;    // Absolute jump
+    static constexpr byte JMP_IN = 0x6C;    // Indirect jump
+    // JSR
+    static constexpr byte JSR = 0x20;   // Jump, save original location
     // LDA
     static constexpr byte LDA_IM = 0xA9;    // Immediate
     static constexpr byte LDA_ZP = 0xA5;    // Zeropage
@@ -514,11 +565,24 @@ struct CPU
     static constexpr byte LDA_AY = 0xB9;    // Absolute, Y
     static constexpr byte LDA_IX = 0xA1;    // (Indirect, X)
     static constexpr byte LDA_IY = 0xB1;    // (Indirect), Y
-    // JMP
-    static constexpr byte JMP_AB = 0x4C;    // Absolute jump
-    static constexpr byte JMP_IN = 0x6C;    // Indirect jump
-    // JSR
-    static constexpr byte JSR = 0x20;   // Jump, save original location
+    // LDX
+    static constexpr byte LDX_IM = 0xA2;    // Immediate
+    static constexpr byte LDX_ZP = 0xA6;    // Zeropage
+    static constexpr byte LDX_ZY = 0xB6;    // Zeropage, Y
+    static constexpr byte LDX_AB = 0xAE;    // Absolute
+    static constexpr byte LDX_AY = 0xBE;    // Absolute, Y
+    // LDY
+    static constexpr byte LDY_IM = 0xA0;    // Immediate
+    static constexpr byte LDY_ZP = 0xA4;    // Zeropage
+    static constexpr byte LDY_ZX = 0xB4;    // Zeropage, X
+    static constexpr byte LDY_AB = 0xAC;    // Absolute
+    static constexpr byte LDY_AX = 0xBC;    // Absolute, X
+    // LSR
+    static constexpr byte LSR_AC = 0x4A;    // Accumulator
+    static constexpr byte LSR_ZP = 0x46;    // Zeropage
+    static constexpr byte LSR_ZX = 0x56;    // Zeropage, X
+    static constexpr byte LSR_AB = 0x4E;    // Absolute
+    static constexpr byte LSR_AX = 0x5E;    // Absolute, X
     // STA
     static constexpr byte STA_ZP = 0x85;    // Zeropage
     static constexpr byte STA_ZX = 0x95;    // Zeropage, X
@@ -1114,6 +1178,114 @@ struct CPU
                     N = (A & 0b10000000) > 0;
                 } break;
 
+                // LDX
+
+                case LDX_IM:
+                {
+                    byte operand = IM();
+                    LD(X, operand);
+                } break;
+
+                case LDX_ZP:
+                {
+                    byte operand = ZP();
+                    LD(X, operand);
+                } break;
+
+                case LDX_ZY:
+                {
+                    byte operand = ZY();
+                    LD(X, operand);
+                } break;
+
+                case LDX_AB:
+                {
+                    byte operand = AB();
+                    LD(X, operand);
+                } break;
+
+                case LDX_AY:
+                {
+                    byte operand = AY();
+                    LD(X, operand);
+                } break;
+
+                // LDY
+
+                case LDY_IM:
+                {
+                    byte operand = IM();
+                    LD(Y, operand);
+                } break;
+
+                case LDY_ZP:
+                {
+                    byte operand = ZP();
+                    LD(Y, operand);
+                } break;
+
+                case LDY_ZX:
+                {
+                    byte operand = ZX();
+                    LD(Y, operand);
+                } break;
+
+                case LDY_AB:
+                {
+                    byte operand = AB();
+                    LD(Y, operand);
+                } break;
+
+                case LDY_AX:
+                {
+                    byte operand = AX();
+                    LD(Y, operand);
+                } break;
+
+                // LSR
+
+                case LSR_AC:
+                {
+                    byte result = LSR(A);
+                    A = result;
+                } break;
+
+                case LSR_ZP:
+                {
+                    byte operand = ZP();
+                    byte result = LSR(operand);
+                    byte address = PC - 1;
+                    memory.WriteByte(cycles, address, result);
+                } break;
+
+                case LSR_ZX:
+                {
+                    byte operand = ZX();
+                    byte result = LSR(operand);
+                    byte address = PC - 1;
+                    memory.WriteByte(cycles, address, result);
+                } break;
+
+                case LSR_AB:
+                {
+                    byte operand = AB();
+                    byte result = LSR(operand);
+                    byte address = PC - 2;
+                    byte address_2 = PC - 1;
+                    byte full_address = (hword)address | (hword)(address_2 << 8);
+                    memory.WriteByte(cycles, full_address, result);
+                } break;
+
+                case LSR_AX:
+                {
+                    byte operand = AX();
+                    byte result = LSR(operand);
+                    byte address = PC - 2;
+                    byte address_2 = PC - 1;
+                    byte full_address = ((hword)address | (hword)(address_2 << 8)) + X;
+                    memory.WriteByte(cycles, full_address, result);
+                } break;
+
                 // STA
 
                 case STA_ZP:
@@ -1169,35 +1341,37 @@ struct CPU
     }
 };
 
+std::vector<byte> load_program(std::string path)
+{
+    std::ifstream fin;
+    fin.open(path, std::ios::binary);
+    if (fin.fail())
+    {
+        std::printf("Error loading file");
+        exit(1);
+    }
+    auto file_size = std::filesystem::file_size(path);
+    return std::vector<byte>((std::istreambuf_iterator<char>(fin)), std::istreambuf_iterator<char>());
+}
 
 int main()
 {
 
     CPU cpu(40);
-    
-    // hard-coded text program: 2+2 and store result
 
-    // Increment 0x00 by 1
-    cpu.memory.Mem[0xFFC + 0] = 0xE6;
-    cpu.memory.Mem[0xFFC + 1] = 0x00;
-    // Increment 0x00 by 1
-    cpu.memory.Mem[0xFFC + 2] = 0xE6;
-    cpu.memory.Mem[0xFFC + 3] = 0x00;
-    // Load 2 into accumulator
-    cpu.memory.Mem[0xFFC + 4] = 0xA9;
-    cpu.memory.Mem[0xFFC + 5] = 0x02;
-    // Sum accumulator with 0x00
-    cpu.memory.Mem[0xFFC + 6] = 0x65;
-    cpu.memory.Mem[0xFFC + 7] = 0x00;
-    // Store result in 0x00
-    cpu.memory.Mem[0xFFC + 8] = 0x85;
-    cpu.memory.Mem[0xFFC + 9] = 0x00;
+    // Load and execute test program:
+    /*
+    INC $00
+    INC $00
+    LDA #$02
+    ADC $00
+    STA $00
+    */
+    std::string filename = "test.o";
+    std::vector<byte> loaded_program = load_program(filename);
+    cpu.memory.WriteProgram(loaded_program, 0xFFC);
 
-
-    
     cpu.execute(0xFFC);
-
- 
     std::printf("A: %d \n", (int)cpu.A);
     std::printf("mem(0): %d \n", (int)cpu.memory.Mem[0]);
     
