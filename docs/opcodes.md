@@ -184,3 +184,12 @@ Both use implied addressing.
 | STA (absolute, Y) | 0x99      |
 | STA (indirect, X) | 0x81      |
 | STA (indirect), Y | 0x91      |
+
+## Shift One Bit Right (LSR)
+| Mnemonic          | Opcode    |
+|:-----------------:|:---------:|
+| LDY (accumulator) | 0x4A      |
+| LDY (zeropage)    | 0x46      |
+| LDY (zeropage, X) | 0x56      |
+| LDY (absolute)    | 0x4E      |
+| LDY (absolute, X) | 0x5E      |
