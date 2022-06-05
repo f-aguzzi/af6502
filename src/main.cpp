@@ -459,6 +459,17 @@ struct CPU
         return temp & 0xFF;
     }
 
+    // Generic ORA operation
+    void ORA(byte operand)
+    {
+        A = A | operand;
+        if ((A & 0x00ff) == 0)
+        {
+            Z = 1;
+        }
+        N = A & 0x80;
+    }
+
     // Generic STA operation
     void STA(hword address)
     {
@@ -583,6 +594,17 @@ struct CPU
     static constexpr byte LSR_ZX = 0x56;    // Zeropage, X
     static constexpr byte LSR_AB = 0x4E;    // Absolute
     static constexpr byte LSR_AX = 0x5E;    // Absolute, X
+    // NOP
+    static constexpr byte NOP = 0xEA;   // Implied
+    // ORA
+    static constexpr byte ORA_IM = 0x09;    // Immediate
+    static constexpr byte ORA_ZP = 0x05;    // Zeropage
+    static constexpr byte ORA_ZX = 0x15;    // Zeropage, X
+    static constexpr byte ORA_AB = 0x0D;    // Absolute
+    static constexpr byte ORA_AX = 0x1D;    // Absolute, X
+    static constexpr byte ORA_AY = 0x19;    // Absolute, Y
+    static constexpr byte ORA_IX = 0x01;    // (Indirect, X)
+    static constexpr byte ORA_IY = 0x11;    // (Indirect), Y
     // STA
     static constexpr byte STA_ZP = 0x85;    // Zeropage
     static constexpr byte STA_ZX = 0x95;    // Zeropage, X
@@ -1285,6 +1307,63 @@ struct CPU
                     byte full_address = ((hword)address | (hword)(address_2 << 8)) + X;
                     memory.WriteByte(cycles, full_address, result);
                 } break;
+
+                // NOP
+                
+                case NOP:
+                {
+                    cycles--;
+                }
+
+                // ORA
+
+                case ORA_IM:
+                {
+                    byte operand = IM();
+                    ORA(operand);
+                }
+
+                case ORA_ZP:
+                {
+                    byte operand = ZP();
+                    ORA(operand);
+                }
+
+                case ORA_ZX:
+                {
+                    byte operand = ZX();
+                    ORA(operand);
+                }
+
+                case ORA_AB:
+                {
+                    byte operand = AB();
+                    ORA(operand);
+                }
+
+                case ORA_AX:
+                {
+                    byte operand = AX();
+                    ORA(operand);
+                }
+
+                case ORA_AY:
+                {
+                    byte operand = AY();
+                    ORA(operand);
+                }
+
+                case ORA_IX:
+                {
+                    byte operand = IX();
+                    ORA(operand);
+                }
+
+                case ORA_IY:
+                {
+                    byte operand = IY();
+                    ORA(operand);
+                }
 
                 // STA
 

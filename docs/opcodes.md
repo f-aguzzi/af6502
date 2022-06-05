@@ -174,6 +174,33 @@ Both use implied addressing.
 | LDY (absolute)    | 0xAC      |
 | LDY (absolute, X) | 0xBC      |
 
+## Shift One Bit Right (LSR)
+| Mnemonic          | Opcode    |
+|:-----------------:|:---------:|
+| LDY (accumulator) | 0x4A      |
+| LDY (zeropage)    | 0x46      |
+| LDY (zeropage, X) | 0x56      |
+| LDY (absolute)    | 0x4E      |
+| LDY (absolute, X) | 0x5E      |
+
+## No operation (NOP)
+Implied addressing.
+| Mnemonic  | Opcode    |
+|:---------:|:---------:|
+| NOP       | 0xEA      |
+
+## Logical OR (ORA)
+| Mnemonic          | Opcode    |
+|:-----------------:|:---------:|
+| ORA (immediate)   | 0x09      |
+| ORA (zeropage)    | 0x05      |
+| ORA (zeropage, X) | 0x15      |
+| ORA (absolute)    | 0x0D      |
+| ORA (absolute, X) | 0x1D      |
+| ORA (absolute, Y) | 0x19      |
+| ORA (indirect, X) | 0x01      |
+| ORA (indirect), Y | 0x11      |
+
 ## Store Accumulator to Memory (STA)
 | Mnemonic          | Opcode    |
 |:-----------------:|:---------:|
@@ -184,12 +211,3 @@ Both use implied addressing.
 | STA (absolute, Y) | 0x99      |
 | STA (indirect, X) | 0x81      |
 | STA (indirect), Y | 0x91      |
-
-## Shift One Bit Right (LSR)
-| Mnemonic          | Opcode    |
-|:-----------------:|:---------:|
-| LDY (accumulator) | 0x4A      |
-| LDY (zeropage)    | 0x46      |
-| LDY (zeropage, X) | 0x56      |
-| LDY (absolute)    | 0x4E      |
-| LDY (absolute, X) | 0x5E      |
