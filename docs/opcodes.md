@@ -201,6 +201,12 @@ Implied addressing.
 | ORA (indirect, X) | 0x01      |
 | ORA (indirect), Y | 0x11      |
 
+## Push Accumulator on Stack (PHA)
+Implied addressing.
+| Mnemonic  | Opcode    |
+|:---------:|:---------:|
+| PHA       | 0x48      |
+
 ## Store Accumulator to Memory (STA)
 | Mnemonic          | Opcode    |
 |:-----------------:|:---------:|

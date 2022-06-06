@@ -605,6 +605,8 @@ struct CPU
     static constexpr byte ORA_AY = 0x19;    // Absolute, Y
     static constexpr byte ORA_IX = 0x01;    // (Indirect, X)
     static constexpr byte ORA_IY = 0x11;    // (Indirect), Y
+    // PHA
+    static constexpr byte PHA = 0x48;   // Implied
     // STA
     static constexpr byte STA_ZP = 0x85;    // Zeropage
     static constexpr byte STA_ZX = 0x95;    // Zeropage, X
@@ -1313,7 +1315,7 @@ struct CPU
                 case NOP:
                 {
                     cycles--;
-                }
+                } break;
 
                 // ORA
 
@@ -1321,48 +1323,57 @@ struct CPU
                 {
                     byte operand = IM();
                     ORA(operand);
-                }
+                } break;
 
                 case ORA_ZP:
                 {
                     byte operand = ZP();
                     ORA(operand);
-                }
+                } break;
 
                 case ORA_ZX:
                 {
                     byte operand = ZX();
                     ORA(operand);
-                }
+                } break;
 
                 case ORA_AB:
                 {
                     byte operand = AB();
                     ORA(operand);
-                }
+                } break;
 
                 case ORA_AX:
                 {
                     byte operand = AX();
                     ORA(operand);
-                }
+                } break;
 
                 case ORA_AY:
                 {
                     byte operand = AY();
                     ORA(operand);
-                }
+                } break;
 
                 case ORA_IX:
                 {
                     byte operand = IX();
                     ORA(operand);
-                }
+                } break;
 
                 case ORA_IY:
                 {
                     byte operand = IY();
                     ORA(operand);
+                } break;
+
+                // PHA
+
+                case PHA:
+                {
+                    SP++;
+                    cycles--;
+                    memory.WriteByte(cycles, SP, A);
                 }
 
                 // STA
