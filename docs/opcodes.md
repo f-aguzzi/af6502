@@ -207,6 +207,24 @@ Implied addressing.
 |:---------:|:---------:|
 | PHA       | 0x48      |
 
+## Push Processor Status on Stack (PHP)
+Implied addressing.
+| Mnemonic  | Opcode    |
+|:---------:|:---------:|
+| PHP       | 0x08      |
+
+## Pull Accumulator from Stack (PLA)
+Implied addressing.
+| Mnemonic  | Opcode    |
+|:---------:|:---------:|
+| PLA       | 0x68      |
+
+## Pull Processor Status from Stack (PLP)
+Implied addressing.
+| Mnemonic  | Opcode    |
+|:---------:|:---------:|
+| PLP       | 0x28      |
+
 ## Store Accumulator to Memory (STA)
 | Mnemonic          | Opcode    |
 |:-----------------:|:---------:|
@@ -216,4 +234,4 @@ Implied addressing.
 | STA (absolute, X) | 0x9D      |
 | STA (absolute, Y) | 0x99      |
 | STA (indirect, X) | 0x81      |
-| STA (indirect), Y | 0x91      |
+| STA (indirect), Y | 0x91      | 

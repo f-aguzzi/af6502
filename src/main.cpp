@@ -607,6 +607,12 @@ struct CPU
     static constexpr byte ORA_IY = 0x11;    // (Indirect), Y
     // PHA
     static constexpr byte PHA = 0x48;   // Implied
+    // PHP
+    static constexpr byte PHP = 0x08;   // Implied
+    // PLA
+    static constexpr byte PLA = 0x68;   // Implied
+    // PLP
+    static constexpr byte PLP = 0x28;   // Implied
     // STA
     static constexpr byte STA_ZP = 0x85;    // Zeropage
     static constexpr byte STA_ZX = 0x95;    // Zeropage, X
@@ -1375,6 +1381,45 @@ struct CPU
                     cycles--;
                     memory.WriteByte(cycles, SP, A);
                 }
+
+                case PHP:
+                {
+                    SP++;
+                    cycles--;
+                    byte flags =
+                    ((C << 7) & 0x80)  | ((Z << 6) & 0x40) |
+                    ((I << 5) & 0x20)  | ((D << 4) & 0x10) |
+                    ((B << 3) & 0x08)  | ((V << 2) & 0x40) |
+                    ((N << 1) & 0x02)  | ((0) & 0x0);
+                    memory.WriteByte(cycles, SP, flags);
+                } break;
+
+                case PLA:
+                {
+                    byte temp = ReadByte(SP--);
+                    cycles--;
+                    A = temp;
+                    if ((temp & 0x00ff) == 0)
+                    {
+                        Z = 1;
+                    }
+                    N = temp & 0x80;
+                    cycles--;
+                } break;
+
+                case PLP:
+                {
+                    byte temp = ReadByte(SP--);
+                    cycles--;
+                    C = (temp >> 7) & 0x01;
+                    Z = (temp >> 6) & 0x01;
+                    I = (temp >> 5) & 0x01;
+                    D = (temp >> 4) & 0x01;
+                    B = (temp >> 3) & 0x01;
+                    V = (temp >> 2) & 0x01;
+                    N = (temp >> 1) & 0x01;
+                    cycles--;
+                } break;
 
                 // STA
 
