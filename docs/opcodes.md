@@ -243,6 +243,48 @@ Implied addressing.
 | ROR (absolute)    | 0x6E      |
 | ROR (absolute, X) | 0x7E      |
 
+## Return from Interrupt (RTI)
+Implied addressing.
+| Mnemonic  | Opcode    |
+|:---------:|:---------:|
+| RTI       | 0x40      |
+
+## Return from Subroutine (RTS)
+Implied addressing.
+| Mnemonic  | Opcode    |
+|:---------:|:---------:|
+| RTS       | 0x60      |
+
+## Subtraction with carry (SBC)
+| Mnemonic          | Opcode    |
+|:-----------------:|:---------:|
+| SBC (immediate)   | 0xE9      |
+| SBC (zeropage)    | 0xE5      |
+| SBC (zeropage, X) | 0xF5      |
+| SBC (absolute)    | 0xED      |
+| SBC (absolute, X) | 0xFD      |
+| SBC (absolute, Y) | 0xF9      |
+| SBC (indirect, X) | 0xE1      |
+| SBC (indirect), Y | 0xF1      |
+
+## Set Carry Flag (SEC)
+Implied addressing.
+| Mnemonic  | Opcode    |
+|:---------:|:---------:|
+| SEC       | 0x38      |
+
+## Set Decimal Flag (SED)
+Implied addressing.
+| Mnemonic  | Opcode    |
+|:---------:|:---------:|
+| SED       | 0xF8      |
+
+## Set Interrupt Disable Status (SEI)
+Implied addressing.
+| Mnemonic  | Opcode    |
+|:---------:|:---------:|
+| SEI       | 0x78      |
+
 ## Store Accumulator to Memory (STA)
 | Mnemonic          | Opcode    |
 |:-----------------:|:---------:|
@@ -252,4 +294,54 @@ Implied addressing.
 | STA (absolute, X) | 0x9D      |
 | STA (absolute, Y) | 0x99      |
 | STA (indirect, X) | 0x81      |
-| STA (indirect), Y | 0x91      | 
+| STA (indirect), Y | 0x91      |
+
+## Store X to Memory (STX)
+| Mnemonic          | Opcode    |
+|:-----------------:|:---------:|
+| STX (zeropage)    | 0x86      |
+| STX (zeropage, Y) | 0x96      |
+| STX (absolute)    | 0x8E      |
+
+## Store Y to Memory (STY)
+| Mnemonic          | Opcode    |
+|:-----------------:|:---------:|
+| STY (zeropage)    | 0x84      |
+| STY (zeropage, X) | 0x94      |
+| STY (absolute)    | 0x8C      |
+
+## Transfer Accumulator to X (TAX)
+Implied addressing.
+| Mnemonic  | Opcode    |
+|:---------:|:---------:|
+| TAX       | 0xAA      |
+
+## Transfer Accumulator to Y (TAY)
+Implied addressing.
+| Mnemonic  | Opcode    |
+|:---------:|:---------:|
+| TAY       | 0xA8      |
+
+## Transfer Stack Pointer to X (TSX)
+Implied addressing.
+| Mnemonic  | Opcode    |
+|:---------:|:---------:|
+| TSX       | 0xBA      |
+
+## Transfer X to Accumulator (TXA)
+Implied addressing.
+| Mnemonic  | Opcode    |
+|:---------:|:---------:|
+| TXA       | 0x8A      |
+
+## Transfer X to Stack Pointer (TXS)
+Implied addressing.
+| Mnemonic  | Opcode    |
+|:---------:|:---------:|
+| TXS       | 0x9A      |
+
+## Transfer Y to Accumulator (TYA)
+Implied addressing.
+| Mnemonic  | Opcode    |
+|:---------:|:---------:|
+| TYA       | 0x98      |

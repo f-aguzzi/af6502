@@ -503,10 +503,28 @@ struct CPU
         return (byte)(temp | (C << 7));
     }
 
+    // Generic SBC operation
+    void SBC(byte operand)
+    {
+        ADC(~operand);
+    }
+
     // Generic STA operation
     void STA(hword address)
     {
         memory.WriteByte(cycles, address, A);
+    }
+
+    // Generic STX operation
+    void STX(hword address)
+    {
+        memory.WriteByte(cycles, address, X);
+    }
+
+    // Generic STY operation
+    void STY(hword address)
+    {
+        memory.WriteByte(cycles, address, Y);
     }
 
     // **** Opcodes ****
@@ -658,6 +676,25 @@ struct CPU
     static constexpr byte ROR_ZX = 0x76;    // Zeropage, X
     static constexpr byte ROR_AB = 0x6E;    // Absolute
     static constexpr byte ROR_AX = 0x7E;    // Absolute, X
+    // RTI
+    static constexpr byte RTI = 0x40;   // Implied
+    // RTS
+    static constexpr byte RTS = 0x60;   // Implied
+    // SBC
+    static constexpr byte SBC_IM = 0xE9;    // Immediate
+    static constexpr byte SBC_ZP = 0xE5;    // Zeropage
+    static constexpr byte SBC_ZX = 0xF5;    // Zeropage, X
+    static constexpr byte SBC_AB = 0xED;    // Absolute
+    static constexpr byte SBC_AX = 0xFD;    // Absolute, X
+    static constexpr byte SBC_AY = 0xF9;    // Absolute, Y
+    static constexpr byte SBC_IX = 0xE1;    // (Indirect, X)
+    static constexpr byte SBC_IY = 0xF1;    // (Indirect), Y
+    // SEC
+    static constexpr byte SEC = 0x38;   // Implied
+    // SED
+    static constexpr byte SED = 0xF8;   // Implied
+    // SEI
+    static constexpr byte SEI = 0x78;   // Implied
     // STA
     static constexpr byte STA_ZP = 0x85;    // Zeropage
     static constexpr byte STA_ZX = 0x95;    // Zeropage, X
@@ -666,6 +703,27 @@ struct CPU
     static constexpr byte STA_AY = 0x99;    // Absolute, Y
     static constexpr byte STA_IX = 0x81;    // (Indirect, X)
     static constexpr byte STA_IY = 0x91;    // (Indirect), Y
+    // STX
+    static constexpr byte STX_ZP = 0x86;    // Zeropage
+    static constexpr byte STX_ZY = 0x96;    // Zeropage, Y
+    static constexpr byte STX_AB = 0x8E;    // Absolute
+    // STY
+    static constexpr byte STY_ZP = 0x84;    // Zeropage
+    static constexpr byte STY_ZX = 0x94;    // Zeropage, X
+    static constexpr byte STY_AB = 0x8C;    // Absolute
+    // TAX
+    static constexpr byte TAX = 0xAA;   // Implied
+    // TAY
+    static constexpr byte TAY = 0xA8;   // Implied
+    // TSX
+    static constexpr byte TSX = 0xBA;   // Implied
+    // TXA
+    static constexpr byte TXA = 0x8A;   // Implied
+    // TXS
+    static constexpr byte TXS = 0x9A;   // Implied
+    // TYA
+    static constexpr byte TYA = 0x98;   // Implied
+
 
     void execute(hword init_addr)
     {
@@ -1546,6 +1604,53 @@ struct CPU
                     memory.WriteByte(cycles, address, temp);
                 } break;
 
+                // RTI
+
+                case RTI:
+                {
+                    byte flags = ReadByte(SP--);
+                    C = (flags >> 7) & 0x01;
+                    Z = (flags >> 6) & 0x01;
+                    D = (flags >> 4) & 0x01;
+                    V = (flags >> 2) & 0x01;
+                    N = (flags >> 1) & 0x01;
+                    PC = ReadByte(SP--);
+                    cycles -= 3;
+                } break;
+
+                // RTI
+
+                case RTS:
+                {
+                    PC = ReadByte(SP--);
+                    PC++;
+                    cycles -= 4;
+                } break;
+
+                // SEC
+
+                case SEC:
+                {
+                    C = 1;
+                    cycles--;
+                } break;
+
+                // SEC
+
+                case SED:
+                {
+                    D = 1;
+                    cycles--;
+                } break;
+
+                // SEI
+
+                case SEI:
+                {
+                    I = 1;
+                    cycles--;
+                } break;
+
                 // STA
 
                 case STA_ZP:
@@ -1589,6 +1694,126 @@ struct CPU
                     hword address = IY_A();
                     STA(address);
                 } break;
+
+                // STX
+
+                case STX_ZP:
+                {
+                    byte address = ZP();
+                    STX(address);
+                } break;
+
+                case STX_ZY:
+                {
+                    byte address = ZY();
+                    STX(address);
+                } break;
+
+                case STX_AB:
+                {
+                    byte address = AB();
+                    STX(address);
+                } break;
+
+                // STY
+
+                case STY_ZP:
+                {
+                    byte address = ZP();
+                    STY(address);
+                } break;
+
+                case STY_ZX:
+                {
+                    byte address = ZX();
+                    STY(address);
+                } break;
+
+                case STY_AB:
+                {
+                    byte address = AB();
+                    STY(address);
+                } break;
+
+                // TAX
+
+                case TAX:
+                {
+                    X = A;
+                    if ((X & 0x00ff) == 0)
+                    {
+                        Z = 1;
+                    }
+                    N = X & 0x80;
+                    cycles--;
+                } break;
+
+                // TAY
+
+                case TAY:
+                {
+                    Y = A;
+                    if ((Y & 0x00ff) == 0)
+                    {
+                        Z = 1;
+                    }
+                    N = Y & 0x80;
+                    cycles--;
+                } break;
+
+                // TSX
+
+                case TSX:
+                {
+                    X = SP;
+                    if ((X & 0x00ff) == 0)
+                    {
+                        Z = 1;
+                    }
+                    N = X & 0x80;
+                    cycles--;
+                } break;
+
+                // TXA
+
+                case TXA:
+                {
+                    A = X;
+                    if ((A & 0x00ff) == 0)
+                    {
+                        Z = 1;
+                    }
+                    N = A & 0x80;
+                    cycles--;
+                } break;
+
+                // TXS
+
+                case TXS:
+                {
+                    SP = X;
+                    if ((SP & 0x00ff) == 0)
+                    {
+                        Z = 1;
+                    }
+                    N = SP & 0x80;
+                    cycles--;
+                } break;
+
+                // TYA
+
+                case TYA:
+                {
+                    A = Y;
+                    if ((A & 0x00ff) == 0)
+                    {
+                        Z = 1;
+                    }
+                    N = A & 0x80;
+                    cycles--;
+                } break;
+
+                // Default
 
                 default:
                 {
