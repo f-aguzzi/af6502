@@ -225,6 +225,24 @@ Implied addressing.
 |:---------:|:---------:|
 | PLP       | 0x28      |
 
+## Rotate One Bit Left (ROL)
+| Mnemonic          | Opcode    |
+|:-----------------:|:---------:|
+| ROL (accumulator) | 0x2A      |
+| ROL (zeropage)    | 0x26      |
+| ROL (zeropage, X) | 0x36      |
+| ROL (absolute)    | 0x2E      |
+| ROL (absolute, X) | 0x3E      |
+
+## Rotate One Bit Right (ROR)
+| Mnemonic          | Opcode    |
+|:-----------------:|:---------:|
+| ROR (accumulator) | 0x6A      |
+| ROR (zeropage)    | 0x66      |
+| ROR (zeropage, X) | 0x76      |
+| ROR (absolute)    | 0x6E      |
+| ROR (absolute, X) | 0x7E      |
+
 ## Store Accumulator to Memory (STA)
 | Mnemonic          | Opcode    |
 |:-----------------:|:---------:|

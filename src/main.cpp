@@ -472,6 +472,37 @@ struct CPU
         N = A & 0x80;
     }
 
+    // Generic ROL operation
+    byte ROL(byte operand)
+    {
+        hword temp = operand << 1;
+        if (temp > 255)
+        {
+            C = 1;
+        }
+        if ((temp & 0x00ff) == 0)
+        {
+            Z = 1;
+        }
+        N = temp & 0x80;
+        cycles--;
+        return (byte)(temp | C);
+    }
+
+    // Generic ROR operation
+    byte ROR(byte operand)
+    {
+        C = operand & 1;
+        byte temp = operand >> 1;
+        if ((temp & 0x00ff) == 0)
+        {
+            Z = 1;
+        }
+        N = temp & 0x80;
+        cycles--;
+        return (byte)(temp | (C << 7));
+    }
+
     // Generic STA operation
     void STA(hword address)
     {
@@ -615,6 +646,18 @@ struct CPU
     static constexpr byte PLA = 0x68;   // Implied
     // PLP
     static constexpr byte PLP = 0x28;   // Implied
+    // ROL
+    static constexpr byte ROL_AC = 0x2A;    // Accumulator
+    static constexpr byte ROL_ZP = 0x26;    // Zeropage
+    static constexpr byte ROL_ZX = 0x36;    // Zeropage, X
+    static constexpr byte ROL_AB = 0x2E;    // Absolute
+    static constexpr byte ROL_AX = 0x3E;    // Absolute, X
+    // ROR
+    static constexpr byte ROR_AC = 0x6A;    // Accumulator
+    static constexpr byte ROR_ZP = 0x66;    // Zeropage
+    static constexpr byte ROR_ZX = 0x76;    // Zeropage, X
+    static constexpr byte ROR_AB = 0x6E;    // Absolute
+    static constexpr byte ROR_AX = 0x7E;    // Absolute, X
     // STA
     static constexpr byte STA_ZP = 0x85;    // Zeropage
     static constexpr byte STA_ZX = 0x95;    // Zeropage, X
@@ -1421,6 +1464,86 @@ struct CPU
                     V = (temp >> 2) & 0x01;
                     N = (temp >> 1) & 0x01;
                     cycles--;
+                } break;
+
+                // ROL
+
+                case ROL_AC:
+                {
+                    byte operand = A;
+                    A = ROL(operand);
+                } break;
+
+                case ROL_ZP:
+                {
+                    byte operand = ZP();
+                    byte temp = ROL(operand);
+                    byte address = PC - 1;
+                    memory.WriteByte(cycles, address, temp);
+                } break;
+
+                case ROL_ZX:
+                {
+                    byte operand = ZX();
+                    byte temp = ROL(operand);
+                    byte address = PC - 1;
+                    memory.WriteByte(cycles, address, temp);
+                } break;
+
+                case ROL_AB:
+                {
+                    byte operand = AB();
+                    byte temp = ROL(operand);
+                    byte address = PC - 1;
+                    memory.WriteByte(cycles, address, temp);
+                } break;
+
+                case ROL_AX:
+                {
+                    byte operand = AX();
+                    byte temp = ROL(operand);
+                    byte address = PC - 1;
+                    memory.WriteByte(cycles, address, temp);
+                } break;
+
+                // ROR
+
+                case ROR_AC:
+                {
+                    byte operand = A;
+                    A = ROR(operand);
+                } break;
+
+                case ROR_ZP:
+                {
+                    byte operand = ZP();
+                    byte temp = ROR(operand);
+                    byte address = PC - 1;
+                    memory.WriteByte(cycles, address, temp);
+                } break;
+
+                case ROR_ZX:
+                {
+                    byte operand = ZX();
+                    byte temp = ROR(operand);
+                    byte address = PC - 1;
+                    memory.WriteByte(cycles, address, temp);
+                } break;
+
+                case ROR_AB:
+                {
+                    byte operand = AB();
+                    byte temp = ROR(operand);
+                    byte address = PC - 1;
+                    memory.WriteByte(cycles, address, temp);
+                } break;
+
+                case ROR_AX:
+                {
+                    byte operand = AX();
+                    byte temp = ROR(operand);
+                    byte address = PC - 1;
+                    memory.WriteByte(cycles, address, temp);
                 } break;
 
                 // STA
