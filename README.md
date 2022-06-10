@@ -1,8 +1,11 @@
 # af6502
 6502 8-bit processor emulator
 
-This emulator is still a work in progress. Most of the instruction set is
-still unimplemented.
+This emulator is still a work in progress.
+
+All of the so-called "legal" opcodes have been implemented. This is enough
+for many instances, but a large part of legacy software relies on 
+optimizations created through the "illegal" opcodes.
 
 ## Usage
 

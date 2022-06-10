@@ -937,7 +937,6 @@ struct CPU
 
                 // BRK
 
-                /*
                 case BRK:
                 {
                     I = 1;
@@ -957,9 +956,8 @@ struct CPU
                     memory.WriteByte(cycles, SP, flags);
                 } break;
 
-                */
-
                 // Clear
+                
                 case CLC:
                 {
                     cycles--;
