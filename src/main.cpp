@@ -62,13 +62,13 @@ struct CPU
 
     byte A, X, Y;   // accumulator + 2 registers
 
-    byte C : 1; // carry flag
-    byte Z : 1; // zero flag
-    byte I : 1; // interrupt flag
-    byte D : 1; // decimal mode flag
-    byte B : 1; // break flag
-    byte V : 1; // overflow flag
-    byte N : 1; // negative flag
+    bool C; // carry flag
+    bool Z; // zero flag
+    bool I; // interrupt flag
+    bool D; // decimal mode flag
+    bool B; // break flag
+    bool V; // overflow flag
+    bool N; // negative flag
 
     Memory memory;
     word cycles;
@@ -88,7 +88,7 @@ struct CPU
 
         // Reset accumulator, registers and flags
         A = X = Y = 0;
-        C = Z = I = D = B = V = N = 0;
+        C = Z = I = D = B = V = N = false;
     }
 
     // Load instruction from memory
@@ -516,7 +516,7 @@ struct CPU
     // Generic SBC operation
     void SBC(byte operand)
     {
-        ADC(~operand);
+        ADC(~operand + 1);
     }
 
     // Generic STA operation
@@ -1741,6 +1741,56 @@ struct CPU
                 {
                     byte address = AB();
                     STY(address);
+                } break;
+
+                // SBC
+
+                case SBC_IM:
+                {
+                    byte operand = IM();
+                    SBC(operand);
+                } break;
+
+                case SBC_ZP:
+                {
+                    byte operand = ZP();
+                    SBC(operand);
+                } break;
+
+                case SBC_ZX:
+                {
+                    byte operand = ZX();
+                    SBC(operand);
+                } break;
+
+                case SBC_AB:
+                {
+                    byte operand = AB();
+                    SBC(operand);
+                } break;
+
+                case SBC_AX:
+                {
+                    byte operand = AX();
+                    SBC(operand);
+                } break;
+
+                case SBC_AY:
+                {
+                    byte operand = AY();
+                    SBC(operand);
+                } break;
+
+                case SBC_IX:
+                {
+                    byte operand = IX();
+                    SBC(operand);
+                } break;
+
+                case SBC_IY:
+                {
+                    byte operand = IY();
+                    SBC(operand);
                 } break;
 
                 // TAX
