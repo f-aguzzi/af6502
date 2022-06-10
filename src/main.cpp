@@ -12,28 +12,35 @@ using byte = std::uint8_t;
 using hword = std::uint16_t;
 using word = std::uint32_t;
 
-static constexpr word MEM_SIZE = 1024 * 64;
+static constexpr hword MEM_SIZE = 1024 * 64 - 1;
 
-struct Memory
+class Memory
 {
     std::array<byte, MEM_SIZE> Mem;
 
+    public:
     void init()
     {
         auto make_zero = [&](byte &b) { b = 0; };
         std::for_each(Mem.begin(), Mem.end(), make_zero);
     }
 
-    byte operator[](word address) const
+    byte operator[](hword address) const
     {
         return Mem[address];
     }
 
     // Write byte to memory, absolute
-    void WriteByte(word cycles, hword address, byte data)
+    void WriteByte(hword address, byte data)
     {
-        cycles--;
+        printf("Indirizzo di scrittura: %d\n", (int)address);
         Mem[address] = data;
+    }
+
+    // Read byte from memory, absolute
+    byte ReadByte(hword address)
+    {
+        return Mem[address];
     }
 
     // Write program to memory
@@ -93,18 +100,19 @@ struct CPU
         return temp;
     }
 
-    // Byte fetch, zeropage
-    byte ReadByte(byte address)
-    {
-        cycles--;
-        return memory[address];
-    }
-
     // Byte fetch, absolute
     byte ReadByte(hword address)
     {
         cycles--;
+        byte temp = memory.ReadByte(address);
         return memory[address];
+    }
+
+    // Byte write, absolute
+    void WriteByte(hword address, byte data)
+    {
+        cycles--;
+        memory.WriteByte(address, data);
     }
 
     // **** Addressing modes ****
@@ -144,7 +152,8 @@ struct CPU
         byte address = FetchInstruction();
         byte address_2 = FetchInstruction();
         hword full_address = (hword)address | (hword)(address_2 << 8);
-        return ReadByte(full_address);
+        byte temp = ReadByte(full_address);
+        return temp;
     }
 
     // Absolute, X addressing
@@ -218,7 +227,8 @@ struct CPU
     {
         byte address = FetchInstruction();
         byte address_2 = FetchInstruction();
-        return ((hword)address_2 << 8) | (hword)address;
+        hword temp = (hword)address | (hword)(address_2 << 8);
+        return temp;
     }
 
     // Absolute, X address
@@ -382,7 +392,7 @@ struct CPU
         }
         N = temp & 0x80;
         cycles--;
-        memory.WriteByte(cycles, address, temp & 0x00FF);
+        WriteByte(address, temp & 0x00FF);
     }
 
     // Generic register decrement
@@ -424,7 +434,7 @@ struct CPU
         }
         N = temp & 0x80;
         cycles--;
-        memory.WriteByte(cycles, address, temp & 0x00FF);
+        WriteByte(address, temp & 0x00FF);
     }
 
     // Generic register increment
@@ -512,19 +522,19 @@ struct CPU
     // Generic STA operation
     void STA(hword address)
     {
-        memory.WriteByte(cycles, address, A);
+        WriteByte(address, A);
     }
 
     // Generic STX operation
     void STX(hword address)
     {
-        memory.WriteByte(cycles, address, X);
+        WriteByte(address, X);
     }
 
     // Generic STY operation
     void STY(hword address)
     {
-        memory.WriteByte(cycles, address, Y);
+        WriteByte(address, Y);
     }
 
     // **** Opcodes ****
@@ -937,27 +947,27 @@ struct CPU
 
                 // BRK
 
+                /*
                 case BRK:
                 {
                     I = 1;
                     SP++;
                     cycles--;
-                    memory.WriteByte(cycles, SP, (byte)((PC >> 8) & 0xFF));
-                    SP++;
+                    WriteByte(SP++, (byte)((PC >> 8) & 0xFF));
                     cycles--;
-                    memory.WriteByte(cycles, SP, (byte)(PC & 0xFF00));
-                    SP++;
+                    WriteByte(SP++, (byte)(PC & 0xFF00));
                     cycles--;
                     byte flags =
                     ((C << 7) & 0x80)  | ((Z << 6) & 0x40) |
                     ((I << 5) & 0x20)  | ((D << 4) & 0x10) |
                     ((B << 3) & 0x08)  | ((V << 2) & 0x40) |
                     ((N << 1) & 0x02)  | ((0) & 0x0);
-                    memory.WriteByte(cycles, SP, flags);
+                    WriteByte(SP, flags);
                 } break;
+                */
 
                 // Clear
-                
+
                 case CLC:
                 {
                     cycles--;
@@ -1077,22 +1087,22 @@ struct CPU
                 case DEC_ZP:
                 {
                     byte operand = ZP();
-                    byte address = memory.Mem[PC];
+                    byte address = memory[PC];
                     DEC(operand, address);
                 } break;
 
                 case DEC_ZX:
                 {
                     byte operand = ZX();
-                    hword address = memory.Mem[PC] + X;
+                    hword address = memory[PC] + X;
                     DEC(operand, address);
                 } break;
 
                 case DEC_AB:
                 {
                     byte operand = AB();
-                    byte address = memory.Mem[PC];
-                    byte address_2 = memory.Mem[PC + 1];
+                    byte address = memory[PC];
+                    byte address_2 = memory[PC + 1];
                     hword full_address = (hword)address | (hword)(address_2 << 8);
                     DEC(operand, full_address);
                 } break;
@@ -1100,8 +1110,8 @@ struct CPU
                 case DEC_AX:
                 {
                     byte operand = AB();
-                    byte address = memory.Mem[PC];
-                    byte address_2 = memory.Mem[PC + 1];
+                    byte address = memory[PC];
+                    byte address_2 = memory[PC + 1];
                     hword full_address = (hword)address | (hword)(address_2 << 8) + X;
                     DEC(operand, full_address);
                 } break;
@@ -1173,22 +1183,22 @@ struct CPU
                 case INC_ZP:
                 {
                     byte operand = ZP();
-                    byte address = memory.Mem[PC - 1];
+                    byte address = memory[PC - 1];
                     INC(operand, address);
                 } break;
 
                 case INC_ZX:
                 {
                     byte operand = ZX();
-                    hword address = memory.Mem[PC - 1] + X;
+                    hword address = memory[PC - 1] + X;
                     INC(operand, address);
                 } break;
 
                 case INC_AB:
                 {
                     byte operand = AB();
-                    byte address = memory.Mem[PC - 1];
-                    byte address_2 = memory.Mem[PC];
+                    byte address = memory[PC - 1];
+                    byte address_2 = memory[PC];
                     hword full_address = (hword)address | (hword)(address_2 << 8);
                     INC(operand, full_address);
                 } break;
@@ -1196,8 +1206,8 @@ struct CPU
                 case INC_AX:
                 {
                     byte operand = AB();
-                    byte address = memory.Mem[PC - 1];
-                    byte address_2 = memory.Mem[PC];
+                    byte address = memory[PC - 1];
+                    byte address_2 = memory[PC];
                     hword full_address = (hword)address | (hword)(address_2 << 8) + X;
                     INC(operand, full_address);
                 } break;
@@ -1243,8 +1253,8 @@ struct CPU
                     cycles--;
                     byte PC_1 = (byte)((PC >> 8) & 0xFF00);
                     byte PC_2 = (byte)(PC & 0xFF);
-                    memory.WriteByte(cycles, SP, PC_1);
-                    memory.WriteByte(cycles, SP + 1, PC_2);
+                    WriteByte(SP, PC_1);
+                    WriteByte(SP + 1, PC_2);
                     byte address = FetchInstruction();
                     byte address_2 = FetchInstruction();
                     hword full_address = ((hword)address_2 << 8) | (hword)address;
@@ -1386,7 +1396,7 @@ struct CPU
                     byte operand = ZP();
                     byte result = LSR(operand);
                     byte address = PC - 1;
-                    memory.WriteByte(cycles, address, result);
+                    WriteByte(address, result);
                 } break;
 
                 case LSR_ZX:
@@ -1394,7 +1404,7 @@ struct CPU
                     byte operand = ZX();
                     byte result = LSR(operand);
                     byte address = PC - 1;
-                    memory.WriteByte(cycles, address, result);
+                    WriteByte(address, result);
                 } break;
 
                 case LSR_AB:
@@ -1404,7 +1414,7 @@ struct CPU
                     byte address = PC - 2;
                     byte address_2 = PC - 1;
                     byte full_address = (hword)address | (hword)(address_2 << 8);
-                    memory.WriteByte(cycles, full_address, result);
+                    WriteByte(full_address, result);
                 } break;
 
                 case LSR_AX:
@@ -1414,7 +1424,7 @@ struct CPU
                     byte address = PC - 2;
                     byte address_2 = PC - 1;
                     byte full_address = ((hword)address | (hword)(address_2 << 8)) + X;
-                    memory.WriteByte(cycles, full_address, result);
+                    WriteByte(full_address, result);
                 } break;
 
                 // NOP
@@ -1480,7 +1490,7 @@ struct CPU
                 {
                     SP++;
                     cycles--;
-                    memory.WriteByte(cycles, SP, A);
+                    WriteByte(SP, A);
                 }
 
                 case PHP:
@@ -1492,7 +1502,7 @@ struct CPU
                     ((I << 5) & 0x20)  | ((D << 4) & 0x10) |
                     ((B << 3) & 0x08)  | ((V << 2) & 0x40) |
                     ((N << 1) & 0x02)  | ((0) & 0x0);
-                    memory.WriteByte(cycles, SP, flags);
+                    WriteByte(SP, flags);
                 } break;
 
                 case PLA:
@@ -1535,7 +1545,7 @@ struct CPU
                     byte operand = ZP();
                     byte temp = ROL(operand);
                     byte address = PC - 1;
-                    memory.WriteByte(cycles, address, temp);
+                    WriteByte(address, temp);
                 } break;
 
                 case ROL_ZX:
@@ -1543,7 +1553,7 @@ struct CPU
                     byte operand = ZX();
                     byte temp = ROL(operand);
                     byte address = PC - 1;
-                    memory.WriteByte(cycles, address, temp);
+                    WriteByte(address, temp);
                 } break;
 
                 case ROL_AB:
@@ -1551,7 +1561,7 @@ struct CPU
                     byte operand = AB();
                     byte temp = ROL(operand);
                     byte address = PC - 1;
-                    memory.WriteByte(cycles, address, temp);
+                    WriteByte(address, temp);
                 } break;
 
                 case ROL_AX:
@@ -1559,7 +1569,7 @@ struct CPU
                     byte operand = AX();
                     byte temp = ROL(operand);
                     byte address = PC - 1;
-                    memory.WriteByte(cycles, address, temp);
+                    WriteByte(address, temp);
                 } break;
 
                 // ROR
@@ -1575,7 +1585,7 @@ struct CPU
                     byte operand = ZP();
                     byte temp = ROR(operand);
                     byte address = PC - 1;
-                    memory.WriteByte(cycles, address, temp);
+                    WriteByte(address, temp);
                 } break;
 
                 case ROR_ZX:
@@ -1583,7 +1593,7 @@ struct CPU
                     byte operand = ZX();
                     byte temp = ROR(operand);
                     byte address = PC - 1;
-                    memory.WriteByte(cycles, address, temp);
+                    WriteByte(address, temp);
                 } break;
 
                 case ROR_AB:
@@ -1591,7 +1601,7 @@ struct CPU
                     byte operand = AB();
                     byte temp = ROR(operand);
                     byte address = PC - 1;
-                    memory.WriteByte(cycles, address, temp);
+                    WriteByte(address, temp);
                 } break;
 
                 case ROR_AX:
@@ -1599,7 +1609,7 @@ struct CPU
                     byte operand = AX();
                     byte temp = ROR(operand);
                     byte address = PC - 1;
-                    memory.WriteByte(cycles, address, temp);
+                    WriteByte(address, temp);
                 } break;
 
                 // RTI
@@ -1665,7 +1675,7 @@ struct CPU
 
                 case STA_AB:
                 {
-                    byte address = AB_A();
+                    hword address = AB_A();
                     STA(address);
                 } break;
 
@@ -1903,7 +1913,7 @@ int main(int argc, char* argv[])
             pf.dumpPath = m.get<2>().to_string();
         }
         // PC start point
-        else if (auto m = ctre::match<cycles_rxp>(s))
+        else if (auto m = ctre::match<start_rxp>(s))
         {
             pf.start_point = m.get<2>();
         }
@@ -1919,10 +1929,10 @@ int main(int argc, char* argv[])
     // Create CPU and load program
     CPU cpu(pf.cycles);
     std::vector<byte> loaded_program = load_program(pf.path);
-    cpu.memory.WriteProgram(loaded_program, 0x100);
+    cpu.memory.WriteProgram(loaded_program, pf.start_point);
 
     // Execute
-    cpu.execute(0x100);
+    cpu.execute(pf.start_point);
 
     // Output registers at end of execution (if required)
     if (pf.dumpStatus)
