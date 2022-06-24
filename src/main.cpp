@@ -102,7 +102,6 @@ struct CPU
     byte ReadByte(hword address)
     {
         cycles--;
-        byte temp = memory.ReadByte(address);
         return memory[address];
     }
 
@@ -535,6 +534,49 @@ struct CPU
         WriteByte(address, Y);
     }
 
+    // Generic DCP operation
+    void DCP(hword address) //
+    {
+        byte operand = ReadByte(address);
+        hword temp = (hword)operand - 1;
+        if (temp > 255)
+        {
+            C = 1;
+        }
+        if ((temp & 0x00ff) == 0)
+        {
+            Z = 1;
+        }
+        N = temp & 0x80;
+        V = (~((hword)A ^ (hword)operand) & ((hword)A ^ (hword)temp) & 0x0080);
+        operand = temp;
+        Compare(A, operand);
+        WriteByte(address, operand);
+        cycles-=2;
+    }
+
+    // Generic DCP operation
+    void ISC(hword address) //
+    {
+        byte operand = ReadByte(address);
+        hword temp = (hword)operand + 1;
+        A = A - operand - !C;
+        if (temp > 255)
+        {
+            C = 1;
+        }
+        if ((temp & 0x00ff) == 0)
+        {
+            Z = 1;
+        }
+        N = temp & 0x80;
+        V = (~((hword)A ^ (hword)operand) & ((hword)A ^ (hword)temp) & 0x0080);
+        operand = temp;
+        Compare(A, operand);
+        WriteByte(address, operand);
+        cycles-=2;
+    }
+
     // **** Opcodes ****
     // ADC
     static constexpr byte ADC_IM = 0x69;    // Immediate
@@ -738,7 +780,26 @@ struct CPU
     // ANC
     static constexpr byte ANC = 0x0B;   // Immediate
     static constexpr byte ANC2 = 0x2B;   // Immediate
-
+    // ANE
+    static constexpr byte ANE = 0x8B;   // Immediate
+    // ARR
+    static constexpr byte ARR = 0x6B;   // Immediate
+    // DCP
+    static constexpr byte DCP_ZP = 0xC7;   // Zeropage
+    static constexpr byte DCP_ZX = 0xD7;   // Zeropage, X
+    static constexpr byte DCP_AB = 0xCF;   // Absolute
+    static constexpr byte DCP_AX = 0xDF;   // Absolute, X
+    static constexpr byte DCP_AY = 0xDB;   // Absolute, Y
+    static constexpr byte DCP_IX = 0xC3;   // (Indirect, X)
+    static constexpr byte DCP_IY = 0xD3;   // (Indirect), Y
+    // ISC
+    static constexpr byte ISC_ZP = 0xE7;   // Zeropage
+    static constexpr byte ISC_ZX = 0xF7;   // Zeropage, X
+    static constexpr byte ISC_AB = 0xEF;   // Absolute
+    static constexpr byte ISC_AX = 0xFF;   // Absolute, X
+    static constexpr byte ISC_AY = 0xFB;   // Absolute, Y
+    static constexpr byte ISC_IX = 0xE3;   // (Indirect, X)
+    static constexpr byte ISC_IY = 0xF3;   // (Indirect), Y
 
 
     void execute(hword init_addr)
@@ -1911,6 +1972,127 @@ struct CPU
                         Z = 1;
                     }
                     N = A & 0x80;
+                } break;
+
+                // ANE
+
+                case ANE:
+                {
+                    byte operand = FetchInstruction();
+                    A = A & X & operand;
+                    if (A == 0)
+                    {
+                        Z = 1;
+                    }
+                    N = A & 0x80;
+                } break;
+
+                // ARR
+
+                case ARR:
+                {
+                    byte operand = FetchInstruction();
+                    hword temp = ((hword)A & (hword)operand) + (hword)A;
+                    V = (~((hword)A ^ (hword)operand) & ((hword)A ^ (hword)temp) & 0x0080);
+                    if (A == 0)
+                    {
+                        Z = 1;
+                    }
+                    N = A & 0x80;
+                    byte C_temp = (A & 0x80) >> 7;
+                    temp &= 0xFF7F;
+                    byte C_old = C << 7;
+                    temp |= C_old;
+                    C = C_temp;
+                    A = temp;
+                } break;
+
+                // DCP
+
+                case DCP_ZP:
+                {
+                    byte address = ZP_A();
+                    DCP(address);
+                } break;
+
+                case DCP_ZX:
+                {
+                    byte address = ZX_A();
+                    DCP(address);
+                } break;
+
+                case DCP_AB:
+                {
+                    byte address = AB_A();
+                    DCP(address);
+                } break;
+
+                case DCP_AX:
+                {
+                    byte address = AX_A();
+                    DCP(address);
+                } break;
+
+                case DCP_AY:
+                {
+                    byte address = AY_A();
+                    DCP(address);
+                } break;
+
+                case DCP_IX:
+                {
+                    byte address = IX_A();
+                    DCP(address);
+                } break;
+
+                case DCP_IY:
+                {
+                    byte address = IY_A();
+                    DCP(address);
+                } break;
+
+                // ISC
+
+                case ISC_ZP:
+                {
+                    byte address = ZP_A();
+                    ISC(address);
+                } break;
+
+                case ISC_ZX:
+                {
+                    byte address = ZX_A();
+                    ISC(address);
+                } break;
+
+                case ISC_AB:
+                {
+                    byte address = AB_A();
+                    ISC(address);
+                } break;
+
+                case ISC_AX:
+                {
+                    byte address = AX_A();
+                    ISC(address);
+                } break;
+
+                case ISC_AY:
+                {
+                    byte address = AY_A();
+                    ISC(address);
+                } break;
+
+                case ISC_IX:
+                {
+                    byte address = IX_A();
+                    ISC(address);
+                } break;
+
+                case ISC_IY:
+                {
+                    byte address = IY_A();
+                    ISC(address);
                 } break;
 
                 // Default
