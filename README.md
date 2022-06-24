@@ -21,7 +21,7 @@ af6502 -input=./program.bin -showstatus
 
 ### Command line arguments:
 
-- `cycles=` *(followed by a number, without quotes)*: sets the number of
+- `-cycles=` *(followed by a number, without quotes)*: sets the number of
   clock cycles to execute
 - `-input=` *(followed by the path, without quotes)*: selects the input
   binary file
@@ -29,7 +29,7 @@ af6502 -input=./program.bin -showstatus
   at the end of the execution
 - `-dump=` *(followed by the path, without quotes)*: selects the path for
   the memory dump file
-- `start=` *(followed by a number, without quotes)*: sets the inital value
+- `-start=` *(followed by a number, without quotes)*: sets the inital value
   for the Program Counter register, that is, the starting memory location
   of the executable. When loading a binary, it will be transcribed to
   memory starting from this value
