@@ -1,4 +1,3 @@
-#include <algorithm>
 #include <array>
 #include <cstdint>
 #include <cstdio>
@@ -21,8 +20,7 @@ class Memory
     public:
     void init()
     {
-        auto make_zero = [&](byte &b) { b = 0; };
-        std::for_each(Mem.begin(), Mem.end(), make_zero);
+        Mem.fill(0);
     }
 
     byte operator[](hword address) const
@@ -733,6 +731,14 @@ struct CPU
     static constexpr byte TXS = 0x9A;   // Implied
     // TYA
     static constexpr byte TYA = 0x98;   // Implied
+
+    // **** Illegal Opcodes ****
+    // ALR
+    static constexpr byte ALR = 0x4B;   // Immediate
+    // ANC
+    static constexpr byte ANC = 0x0B;   // Immediate
+    static constexpr byte ANC2 = 0x2B;   // Immediate
+
 
 
     void execute(hword init_addr)
@@ -1869,6 +1875,42 @@ struct CPU
                     }
                     N = A & 0x80;
                     cycles--;
+                } break;
+
+                // **** Illegal Opcodes ****
+
+                // ALR
+
+                case ALR:
+                {
+                    byte operand = FetchInstruction();
+                    operand &= A;
+                    hword temp = (hword)operand << 1;
+                    if (temp > 255)
+                    {
+                        C = 1;
+                    }
+                    if ((temp & 0x00ff) == 0)
+                    {
+                        Z = 1;
+                    }
+                    A = temp;
+                    N = A & 0x80;
+                } break;
+
+                // ANC
+
+                case ANC:
+                case ANC2:
+                {
+                    byte operand = FetchInstruction();
+                    A &= operand;
+                    C = (A & 0x80) >> 7; 
+                    if (A == 0)
+                    {
+                        Z = 1;
+                    }
+                    N = A & 0x80;
                 } break;
 
                 // Default
