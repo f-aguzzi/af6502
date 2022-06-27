@@ -219,6 +219,13 @@ struct CPU
         return FetchInstruction() + X;
     }
 
+    // Zeropage, Y address
+    byte ZY_A()
+    {
+        cycles--;
+        return FetchInstruction() + Y;
+    }
+
     // Absolute address
     hword AB_A()
     {
@@ -555,7 +562,7 @@ struct CPU
         cycles-=2;
     }
 
-    // Generic DCP operation
+    // Generic ISC operation
     void ISC(hword address) //
     {
         byte operand = ReadByte(address);
@@ -575,6 +582,51 @@ struct CPU
         Compare(A, operand);
         WriteByte(address, operand);
         cycles-=2;
+    }
+
+    // Generic RLA operation
+    void RLA(hword address)
+    {
+        byte operand = ReadByte(address);
+        hword temp = (hword)operand << 1;
+        if (temp > 255)
+        {
+            C = 1;
+        }
+        temp = (temp & 0xFE) | C;
+        if ((temp & 0x00ff) == 0)
+        {
+            Z = 1;
+        }
+        N = temp & 0x80;
+        operand = (byte)temp;
+        A = A & operand;
+        WriteByte(address, operand);
+        cycles-=2;
+    }
+
+    // Generic RRA operation
+    void RRA(hword address)
+    {
+        byte operand = ReadByte(address);
+        C = operand & 0x01;
+        byte temp = operand >> 1;
+        temp = (temp & 0x7F) & (C << 7);
+        A = A + operand +  C;
+        if ((temp & 0x00ff) == 0)
+        {
+            Z = 1;
+        }
+        N = temp & 0x80;
+        V = (~((hword)A ^ (hword)operand) & ((hword)A ^ (hword)temp) & 0x0080);
+        WriteByte(address, operand);
+        cycles-=2;
+    }
+
+    // Generic SAX operation
+    inline void SAX(hword address)
+    {
+        WriteByte(address, A & X);
     }
 
     // **** Opcodes ****
@@ -800,7 +852,68 @@ struct CPU
     static constexpr byte ISC_AY = 0xFB;   // Absolute, Y
     static constexpr byte ISC_IX = 0xE3;   // (Indirect, X)
     static constexpr byte ISC_IY = 0xF3;   // (Indirect), Y
-
+    // LAS
+    static constexpr byte LAS = 0xBB;   // Absolute, Y
+    // LAX
+    static constexpr byte LAX_ZP = 0xA7;   // Zeropage
+    static constexpr byte LAX_ZY = 0xB7;   // Zeropage, Y
+    static constexpr byte LAX_AB = 0xAF;   // Absolute
+    static constexpr byte LAX_AY = 0xBF;   // Absolute, Y
+    static constexpr byte LAX_IX = 0xA3;   // (Indirect, X)
+    static constexpr byte LAX_IY = 0xB3;   // (Indirect), Y
+    // LXA
+    static constexpr byte LXA = 0xAB;   // Immediate
+    // RLA
+    static constexpr byte RLA_ZP = 0x27;   // Zeropage
+    static constexpr byte RLA_ZX = 0x37;   // Zeropage, X
+    static constexpr byte RLA_AB = 0x2F;   // Absolute
+    static constexpr byte RLA_AX = 0x3F;   // Absolute, X
+    static constexpr byte RLA_AY = 0x3B;   // Absolute, Y
+    static constexpr byte RLA_IX = 0x23;   // (Indirect, X)
+    static constexpr byte RLA_IY = 0x33;   // (Indirect), Y
+    // RRA
+    static constexpr byte RRA_ZP = 0x67;   // Zeropage
+    static constexpr byte RRA_ZX = 0x77;   // Zeropage, X
+    static constexpr byte RRA_AB = 0x6F;   // Absolute
+    static constexpr byte RRA_AX = 0x7F;   // Absolute, X
+    static constexpr byte RRA_AY = 0x7B;   // Absolute, Y
+    static constexpr byte RRA_IX = 0x63;   // (Indirect, X)
+    static constexpr byte RRA_IY = 0x73;   // (Indirect), Y
+    // SAX
+    static constexpr byte SAX_ZP = 0x87;   // Zeropage
+    static constexpr byte SAX_ZY = 0x97;   // Zeropage, Y
+    static constexpr byte SAX_AB = 0x8F;   // Absolute
+    static constexpr byte SAX_IX = 0x83;   // (Indirect, X)
+    // SBX
+    static constexpr byte SBX = 0xCB;   // Immediate
+    // SHA
+    static constexpr byte SHA_AY = 0x9F;   // Absolute, Y
+    static constexpr byte SHA_IY = 0x93;   // (Indirect), Y
+    // SHX
+    static constexpr byte SHX = 0x9E;   // Absolute, Y
+    // SHY
+    static constexpr byte SHY = 0x9C;   // Absolute, X
+    // SLO
+    static constexpr byte SLO_ZP = 0x07;   // Zeropage
+    static constexpr byte SLO_ZX = 0x17;   // Zeropage, X
+    static constexpr byte SLO_AB = 0x0F;   // Absolute
+    static constexpr byte SLO_AX = 0x1F;   // Absolute, X
+    static constexpr byte SLO_AY = 0x1B;   // Absolute, Y
+    static constexpr byte SLO_IX = 0x03;   // (Indirect, X)
+    static constexpr byte SLO_IY = 0x13;   // (Indirect), Y
+    // SRE
+    static constexpr byte SRE_ZP = 0x47;   // Zeropage
+    static constexpr byte SRE_ZX = 0x57;   // Zeropage, X
+    static constexpr byte SRE_AB = 0x4F;   // Absolute
+    static constexpr byte SRE_AX = 0x5F;   // Absolute, X
+    static constexpr byte SRE_AY = 0x5B;   // Absolute, Y
+    static constexpr byte SRE_IX = 0x43;   // (Indirect, X)
+    static constexpr byte SRE_IY = 0x53;   // (Indirect), Y
+    // TAS
+    static constexpr byte TAS = 0x9B;   // Absolute, Y
+    // USBC
+    static constexpr byte USBC = 0xEB;   // Immediate
+    // NOPs: not listed here
 
     void execute(hword init_addr)
     {
@@ -1944,7 +2057,7 @@ struct CPU
 
                 case ALR:
                 {
-                    byte operand = FetchInstruction();
+                    byte operand = IM();
                     operand &= A;
                     hword temp = (hword)operand << 1;
                     if (temp > 255)
@@ -1964,7 +2077,7 @@ struct CPU
                 case ANC:
                 case ANC2:
                 {
-                    byte operand = FetchInstruction();
+                    byte operand = IM();
                     A &= operand;
                     C = (A & 0x80) >> 7; 
                     if (A == 0)
@@ -1978,8 +2091,8 @@ struct CPU
 
                 case ANE:
                 {
-                    byte operand = FetchInstruction();
-                    A = A & X & operand;
+                    byte operand = IM();
+                    A = (A | 0xFF) & X & operand;
                     if (A == 0)
                     {
                         Z = 1;
@@ -1991,7 +2104,7 @@ struct CPU
 
                 case ARR:
                 {
-                    byte operand = FetchInstruction();
+                    byte operand = IM();
                     hword temp = ((hword)A & (hword)operand) + (hword)A;
                     V = (~((hword)A ^ (hword)operand) & ((hword)A ^ (hword)temp) & 0x0080);
                     if (A == 0)
@@ -2094,6 +2207,285 @@ struct CPU
                     byte address = IY_A();
                     ISC(address);
                 } break;
+
+                // LAS
+
+                case LAS:
+                {
+                    byte operand = AY();
+                    A = operand & SP;
+                    X = SP = A;
+                    if (A == 0)
+                    {
+                        Z = 1;
+                    }
+                    N = A & 0x80;
+                } break;
+
+                // LAX
+
+                case LAX_ZP:
+                {
+                    byte operand = ZP();
+                    A = X = operand;
+                } break;
+
+                case LAX_ZY:
+                {
+                    byte operand = ZY();
+                    A = X = operand;
+                } break;
+
+                case LAX_AB:
+                {
+                    byte operand = AB();
+                    A = X = operand;
+                } break;
+
+                case LAX_AY:
+                {
+                    byte operand = AY();
+                    A = X = operand;
+                } break;
+
+                case LAX_IX:
+                {
+                    byte operand = IX();
+                    A = X = operand;
+                } break;
+
+                case LAX_IY:
+                {
+                    byte operand = IY();
+                    A = X = operand;
+                } break;
+
+                // LXA
+
+                case LXA:
+                {
+                    byte operand = IM();
+                    X = A = (A | 0xFF) & operand;
+                    if (A == 0)
+                    {
+                        Z = 1;
+                    }
+                    N = A & 0x80;
+                } break;
+
+                // RLA
+
+                case RLA_ZP:
+                {
+                    hword address = ZP_A();
+                    RLA(address);
+                } break;
+
+                case RLA_ZX:
+                {
+                    hword address = ZX_A();
+                    RLA(address);
+                } break;
+
+                case RLA_AB:
+                {
+                    hword address = AB_A();
+                    RLA(address);
+                } break;
+
+                case RLA_AX:
+                {
+                    hword address = AX_A();
+                    RLA(address);
+                } break;
+
+                case RLA_AY:
+                {
+                    hword address = AY_A();
+                    RLA(address);
+                } break;
+
+                case RLA_IX:
+                {
+                    hword address = IX_A();
+                    RLA(address);
+                } break;
+
+                case RLA_IY:
+                {
+                    hword address = IY_A();
+                    RLA(address);
+                } break;
+
+                // RRA
+
+                case RRA_ZP:
+                {
+                    hword address = ZP_A();
+                    RRA(address);
+                } break;
+
+                case RRA_ZX:
+                {
+                    hword address = ZX_A();
+                    RRA(address);
+                } break;
+
+                case RRA_AB:
+                {
+                    hword address = AB_A();
+                    RRA(address);
+                } break;
+
+                case RRA_AX:
+                {
+                    hword address = AX_A();
+                    RRA(address);
+                } break;
+
+                case RRA_AY:
+                {
+                    hword address = AY_A();
+                    RRA(address);
+                } break;
+
+                case RRA_IX:
+                {
+                    hword address = IX_A();
+                    RRA(address);
+                } break;
+
+                case RRA_IY:
+                {
+                    hword address = IY_A();
+                    RRA(address);
+                } break;
+
+                // SAX
+
+                case SAX_ZP:
+                {
+                    hword address = ZP_A();
+                    SAX(address);
+                } break;
+
+                case SAX_ZY:
+                {
+                    hword address = ZY_A();
+                    SAX(address);
+                } break;
+
+                case SAX_AB:
+                {
+                    hword address = AB_A();
+                    SAX(address);
+                } break;
+
+                case SAX_IX:
+                {
+                    hword address = IX_A();
+                    SAX(address);
+                } break;
+
+                // SBX
+
+                case SBX:
+                {
+                    byte operand = IM();
+                    hword temp = (hword)(A & X) - operand;
+                    C = (temp & 0x80) >> 7; 
+                    if (temp == 0)
+                    {
+                        Z = 1;
+                    }
+                    N = temp & 0x80;
+                    X = temp;
+                }
+
+                // Implied, 2-cycle NOPs
+
+                case 0x1A:
+                case 0x3A:
+                case 0x5A:
+                case 0x7A:
+                case 0xDA:
+                case 0xFA:
+                {
+                    cycles--;
+                } break;
+
+                // Immediate, 2-cycle NOPs
+
+                case 0x80:
+                case 0x82:
+                case 0x89:
+                case 0xC2:
+                case 0xE2:
+                {
+                    IM();
+                } break;
+
+                // Zeropage, 3-cycle NOPs
+
+                case 0x04:
+                case 0x44:
+                case 0x64:
+                {
+                    ZP();
+                } break;
+
+                // Zeropage, X, 3-cycle NOPs
+
+                case 0x14:
+                case 0x34:
+                case 0x54:
+                case 0x74:
+                case 0xD4:
+                case 0xF4:
+                {
+                    ZX();
+                } break;
+
+                // Absolute, 4-cycle NOP
+                
+                case 0x0C:
+                {
+                    AB();
+                } break;
+
+                // Absolute, X, 4+ cycle NOPs
+
+                case 0x1C:	
+                case 0x3C:	
+                case 0x5C:	
+                case 0x7C:	
+                case 0xDC:	
+                case 0xFC:
+                {
+                    AX();
+                } break;
+
+                // JAM
+
+                case 0x02:
+                case 0x12:
+                case 0x22:
+                case 0x32:
+                case 0x42:
+                case 0x52:
+                case 0x62:
+                case 0x72:
+                case 0x92:
+                case 0xB2:
+                case 0xD2:
+                case 0xF2:
+                {
+                    while (true)
+                    {
+                        
+                    }
+                } break;
+
 
                 // Default
 
