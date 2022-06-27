@@ -345,3 +345,240 @@ Implied addressing.
 | Mnemonic  | Opcode    |
 |:---------:|:---------:|
 | TYA       | 0x98      |
+
+
+
+# Illegal opcodes
+
+
+## AND + LSR (ALR/ASR)
+Immediate addressing.
+| Mnemonic  | Opcode    |
+|:---------:|:---------:|
+| ALR       | 0x48      |
+
+## AND + set C as ASL (ANC)
+Immediate addressing.
+| Mnemonic  | Opcode    |
+|:---------:|:---------:|
+| ANC       | 0x0B      |
+
+## AND + set C as ROL (ANC2)
+Immediate addressing.
+| Mnemonic  | Opcode    |
+|:---------:|:---------:|
+| ANC2      | 0x2B      |
+
+## * AND X + AND oper (ANE/XAA)
+Immediate addressing.
+| Mnemonic  | Opcode    |
+|:---------:|:---------:|
+| ANE       | 0x8B      |
+
+## AND + ROR (ARR)
+Immediate addressing.
+| Mnemonic  | Opcode    |
+|:---------:|:---------:|
+| ARR       | 0x6B      |
+
+## DEC + CMP (DCP/DCM)
+| Mnemonic              | Opcode    |
+|:---------------------:|:---------:|
+| DCP (zeropage)	    | 0xC7      |
+| DCP (zeropage,X)      | 0xD7      |
+| DCP (absolute)        | 0xCF      |
+| DCP (absolute ,X)     | 0xDF      |
+| DCP (absolute,Y)      | 0xDB      |
+| DCP ((indirect,X))    | 0xC3      |
+| DCP ((indirect),Y)    | 0xD3      |
+
+## INC + SBC (ISC)
+| Mnemonic              | Opcode    |
+|:---------------------:|:---------:|
+| ISC (zeropage)	    | 0xE7      |
+| ISC (zeropage,X)      | 0xF7      |
+| ISC (absolute)        | 0xEF      |
+| ISC (absolute ,X)     | 0xFF      |
+| ISC (absolute,Y)      | 0xFB      |
+| ISC ((indirect,X))    | 0xE3      |
+| ISC ((indirect),Y)    | 0xF3      |
+
+## LDA/TSX (LAS/LAR)
+Absolute addressing.
+| Mnemonic  | Opcode    |
+|:---------:|:---------:|
+| LAS       | 0xBB      |
+
+## LDA + LDX (LAX)
+Absolute addressing.
+| Mnemonic              | Opcode    |
+|:---------------------:|:---------:|
+| LAX (zeropage)	    | 0xA7      |
+| LAX (zeropage,Y)      | 0xB7      |
+| LAX (absolute)        | 0xAF      |
+| LAX (absolute,Y)      | 0xBF      |
+| LAX ((indirect,X))    | 0xA3      |
+| LAX ((indirect),Y)    | 0xB3      |
+
+## LAX immediate (LXA)
+Immediate addressing.
+| Mnemonic  | Opcode    |
+|:---------:|:---------:|
+| LXA       | 0xAB      |
+
+## ROL + AND (RLA)
+| Mnemonic              | Opcode    |
+|:---------------------:|:---------:|
+| RLA (zeropage)	    | 0x27      |
+| RLA (zeropage,X)      | 0x37      |
+| RLA (absolute)        | 0x2F      |
+| RLA (absolute,X)      | 0x3F      |
+| RLA (absolute,Y)      | 0x3B      |
+| RLA ((indirect,X))    | 0x23      |
+| RLA ((indirect),Y)    | 0x33      |
+
+## ROR + ADC (RRA)
+| Mnemonic              | Opcode    |
+|:---------------------:|:---------:|
+| RLA (zeropage)	    | 0x67      |
+| RLA (zeropage,X)      | 0x77      |
+| RLA (absolute)        | 0x6F      |
+| RLA (absolute,X)      | 0x7F      |
+| RLA (absolute,Y)      | 0x7B      |
+| RLA ((indirect,X))    | 0x63      |
+| RLA ((indirect),Y)    | 0x73      |
+
+## A & X to memory (SAX)
+| Mnemonic              | Opcode    |
+|:---------------------:|:---------:|
+| SAX (zeropage)	    | 0x87      |
+| SAX (zeropage,Y)	    | 0x97      |
+| SAX (absolute)	    | 0x8F      |
+| SAX ((indirect,X)	    | 0x83      |
+
+## CMP + DEX (SBX)
+Immediate addressing.
+| Mnemonic  | Opcode    |
+|:---------:|:---------:|
+| SBX       | 0xCB      |
+
+## Store X AND (high-byte of addr. + 1) at address (SHA/AXH/AXA)
+| Mnemonic              | Opcode    |
+|:---------------------:|:---------:|
+| RLA (absolute,Y)      | 0x7F      |
+| RLA ((indirect,Y))    | 0x63      |
+
+## (SHX/A11/SXA/XAS)
+(Absolute, Y) addressing.
+| Mnemonic  | Opcode    |
+|:---------:|:---------:|
+| SBX       | 0x9E      |
+
+## Store Y AND (high-byte of addr. + 1) at address (SHY/A11/SYA/SAY)
+(Absolute, X) addressing.
+| Mnemonic  | Opcode    |
+|:---------:|:---------:|
+| SBX       | 0x9C      |
+
+## ASL + ORA (SLO/ASO)
+| Mnemonic              | Opcode    |
+|:---------------------:|:---------:|
+| SLO (zeropage)	    |   0x07    |	 
+| SLO (zeropage, X)	    |   0x17    |  
+| SLO (absolute)	    |   0x0F	|
+| SLO (absolute, X)	    |   0x1F	|
+| SLO (absolute, Y)     |   0x1B	|
+| SLO ((indirect, X)    |   0x03	|
+| SLO ((indirect), Y    |   0x13	|
+
+## LSR + EOR (SRE/LSE)
+| Mnemonic              | Opcode    |
+|:---------------------:|:---------:|
+| SRE (zeropage)	    |   0x47    |	 
+| SRE (zeropage, X)	    |   0x57    |  
+| SRE (absolute)	    |   0x4F	|
+| SRE (absolute, X)	    |   0x5F	|
+| SRE (absolute, Y)     |   0x5B	|
+| SRE ((indirect, X)    |   0x43	|
+| SRE ((indirect), Y    |   0x53	|
+
+## Put A AND X in SP and stores A AND X AND (high-byte of addr. + 1) at address (TAS/XAS/SHS)
+(Absolute, Y) addressing.
+| Mnemonic  | Opcode    |
+|:---------:|:---------:|
+| TAS       | 0x9B      |
+
+## SBC + NOP (USBC/SBC)
+Immediate addressing.
+| Mnemonic  | Opcode    |
+|:---------:|:---------:|
+| USBC      | 0xEB      |
+
+## Null opcodes (NOP)
+
+### Implied, 2-cycle NOPs
+| Mnemonic  | Opcode    |
+|:---------:|:---------:|
+| NOP       | 0x1A      |
+| NOP       | 0x3A      |
+| NOP       | 0x5A      |
+| NOP       | 0x7A      |
+| NOP       | 0xDA      |
+| NOP       | 0xFA      |
+
+### Immediate, 2-cycle NOPs
+| Mnemonic  | Opcode    |
+|:---------:|:---------:|
+| NOP       | 0x80      |
+| NOP       | 0x82      |
+| NOP       | 0x89      |
+| NOP       | 0xC2      |
+| NOP       | 0xE2      |
+
+### Zeropage, 3-cycle NOPs
+| Mnemonic  | Opcode    |
+|:---------:|:---------:|
+| NOP       | 0x04      |
+| NOP       | 0x44      |
+| NOP       | 0x64      |
+
+### Zeropage, X, 3-cycle NOPs
+| Mnemonic  | Opcode    |
+|:---------:|:---------:|
+| NOP       | 0x14      |
+| NOP       | 0x34      |
+| NOP       | 0x54      |
+| NOP       | 0x74      |
+| NOP       | 0xD4      |
+| NOP       | 0xF4      |
+
+### Absolute, 4-cycle NOP
+| Mnemonic  | Opcode    |
+|:---------:|:---------:|
+| NOP       | 0x0C      |
+
+### Absolute, X, 4+ cycle NOPs
+| Mnemonic  | Opcode    |
+|:---------:|:---------:|
+| NOP       | 0x1C      |
+| NOP       | 0x3C      |
+| NOP       | 0x5C      |
+| NOP       | 0x7C      |
+| NOP       | 0xDC      |
+| NOP       | 0xFC      |
+
+## Block CPU (JAM)
+| Mnemonic  | Opcode    |
+|:---------:|:---------:|
+| JAM       | 0x02      |
+| JAM       | 0x12      |
+| JAM       | 0x22      |
+| JAM       | 0x32      |
+| JAM       | 0x42      |
+| JAM       | 0x52      |
+| JAM       | 0x62      |
+| JAM       | 0x72      |
+| JAM       | 0x92      |
+| JAM       | 0xB2      |
+| JAM       | 0xD2      |
+| JAM       | 0xF2      |

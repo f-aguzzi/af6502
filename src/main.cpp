@@ -629,6 +629,23 @@ struct CPU
         WriteByte(address, A & X);
     }
 
+    // Generic SLO operation
+    void SLO(hword address)
+    {
+        byte operand = ReadByte(address);
+        hword temp = (hword)operand << 1;
+        temp &= 0xFFFE;
+        C = (temp >> 7) & 0x0001;
+        if ((temp & 0x00ff) == 0)
+        {
+            Z = 1;
+        }
+        N = temp & 0x80;
+        cycles--;
+        byte result = temp;
+        WriteByte(address, result);
+    }
+
     // **** Opcodes ****
     // ADC
     static constexpr byte ADC_IM = 0x69;    // Immediate
@@ -2402,6 +2419,8 @@ struct CPU
                     X = temp;
                 }
 
+                // SLO
+
                 // Implied, 2-cycle NOPs
 
                 case 0x1A:
@@ -2482,7 +2501,7 @@ struct CPU
                 {
                     while (true)
                     {
-                        
+
                     }
                 } break;
 
