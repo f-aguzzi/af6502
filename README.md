@@ -3,9 +3,8 @@
 
 This emulator is still a work in progress.
 
-All of the so-called "legal" opcodes have been implemented. This is enough
-for many instances, but a large part of legacy software relies on 
-optimizations created through the "illegal" opcodes.
+All opcodes have been implemented, but nothing has been thoroughly tested yet.
+Opcodes may not be working as intended, or completely misfire.
 
 ## Usage
 
