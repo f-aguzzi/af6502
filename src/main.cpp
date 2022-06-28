@@ -82,7 +82,7 @@ struct CPU
     {
         // Reset PC and SP to default values
         PC = 0xFFFC;
-        SP = 0x00FF;
+        SP = 0x0100;
 
         // Reset accumulator, registers and flags
         A = X = Y = 0;
@@ -644,6 +644,23 @@ struct CPU
         cycles--;
         byte result = temp;
         WriteByte(address, result);
+    }
+
+    // Generic SRE operation
+    void SRE(hword address)
+    {
+        byte operand = ReadByte(address);
+        C = operand & 0x01;
+        operand >>= 1;
+        operand &= 0x7F;
+        if ((operand & 0x00ff) == 0)
+        {
+            Z = 1;
+        }
+        N = operand & 0x80;
+        cycles--;
+        WriteByte(address, operand);
+        A ^= operand;
     }
 
     // **** Opcodes ****
@@ -2417,9 +2434,125 @@ struct CPU
                     }
                     N = temp & 0x80;
                     X = temp;
-                }
+                } break;
 
                 // SLO
+
+                case SLO_ZP:
+                {
+                    hword address = ZP_A();
+                    SLO(address);
+                } break;
+
+                case SLO_ZX:
+                {
+                    hword address = ZX_A();
+                    SLO(address);
+                } break;
+
+                case SLO_AB:
+                {
+                    hword address = AB_A();
+                    SLO(address);
+                } break;
+
+                case SLO_AX:
+                {
+                    hword address = AX_A();
+                    SLO(address);
+                } break;
+
+                case SLO_AY:
+                {
+                    hword address = AY_A();
+                    SLO(address);
+                } break;
+
+                case SLO_IX:
+                {
+                    hword address = IX_A();
+                    SLO(address);
+                } break;
+
+                case SLO_IY:
+                {
+                    hword address = IY_A();
+                    SLO(address);
+                } break;
+
+                // SRE
+
+                case SRE_ZP:
+                {
+                    hword address = ZP_A();
+                    SRE(address);
+                } break;
+
+                case SRE_ZX:
+                {
+                    hword address = ZX_A();
+                    SRE(address);
+                } break;
+
+                case SRE_AB:
+                {
+                    hword address = AB_A();
+                    SRE(address);
+                } break;
+
+                case SRE_AX:
+                {
+                    hword address = AX_A();
+                    SRE(address);
+                } break;
+
+                case SRE_AY:
+                {
+                    hword address = AY_A();
+                    SRE(address);
+                } break;
+
+                case SRE_IX:
+                {
+                    hword address = IX_A();
+                    SRE(address);
+                } break;
+
+                case SRE_IY:
+                {
+                    hword address = IY_A();
+                    SRE(address);
+                } break;
+
+                // TAS
+
+                case TAS:
+                {
+                    hword address = AY_A();
+                    SP = A & X;
+                    byte result = SP & (((address >> 15) & 0x01) + 1);
+                    cycles--;
+                    WriteByte(address, result);
+                } break;
+
+                // USBC
+
+                case USBC:
+                {
+                    byte operand = IM();
+                    hword temp = (hword)A - (hword)operand - (hword)(!C);
+                    if (temp > 255)
+                    {
+                        C = 1;
+                    }
+                    if ((temp & 0x00ff) == 0)
+                    {
+                        Z = 1;
+                    }
+                    N = temp & 0x80;
+                    V = (~((hword)A ^ (hword)operand) & ((hword)A ^ (hword)temp) & 0x0080);
+                    A = temp & 0x00FF;
+                } break;
 
                 // Implied, 2-cycle NOPs
 
