@@ -193,3 +193,62 @@ TEST(AF6502Tests, AddressingModesTest)
     EXPECT_EQ(cpu.IY(), 0x05);
     EXPECT_EQ(cpu.cycles, 0);  // 5 cycles consumed
 }
+
+// Test all the address-reading functions
+TEST(AF6502Tests, AddressReadingTest)
+{
+    CPU cpu(19);
+
+    // Zeropage addressing
+    cpu.memory.WriteByte(0xFFC, 0xA8);
+    EXPECT_EQ(cpu.ZP_A(), 0xA8);
+    EXPECT_EQ(cpu.cycles, 18);  // 1 cycle consumed
+
+    // Zeropage, X addressing
+    cpu.X = 33;
+    cpu.memory.WriteByte(0xFFD, 0x34);
+    EXPECT_EQ(cpu.ZX_A(), 0x34  + cpu.X);
+    EXPECT_EQ(cpu.cycles, 16);  // 2 cycles consumed
+
+    // Zeropage, Y addressing
+    cpu.Y = 47;
+    cpu.memory.WriteByte(0xFFE, 0x81);
+    EXPECT_EQ(cpu.ZY_A(), 0x81 + cpu.Y);
+    EXPECT_EQ(cpu.cycles, 14);  // 2 cycles consumed
+
+    // Absolute addressing
+    cpu.memory.WriteByte(0xFFF, 0xA4);
+    cpu.memory.WriteByte(0x1000, 0x33);
+    EXPECT_EQ(cpu.AB_A(), 0x33A4);
+    EXPECT_EQ(cpu.cycles, 12);  // 2 cycles consumed
+
+    // Absolute, X addressing
+    cpu.X = 73;
+    cpu.memory.WriteByte(0x1001, 0xBB);
+    cpu.memory.WriteByte(0x1002, 0xE1);
+    EXPECT_EQ(cpu.AX_A(), 0xE1BB + cpu.X);
+    EXPECT_EQ(cpu.cycles, 10);  // 2 cycles consumed
+
+    // Absolute, Y addressing
+    cpu.Y = 22;
+    cpu.memory.WriteByte(0x1003, 0x11);
+    cpu.memory.WriteByte(0x1004, 0xC6);
+    EXPECT_EQ(cpu.AY_A(), 0xC611 + cpu.Y);
+    EXPECT_EQ(cpu.cycles, 8);  // 2 cycles consumed
+
+    // (Indirect, X) address
+    cpu.X = 94;
+    cpu.memory.WriteByte(0x1005, 0x12);
+    cpu.memory.WriteByte(0x12 + cpu.X, 0x88);
+    cpu.memory.WriteByte(0x13 + cpu.X, 0xA9);
+    EXPECT_EQ(cpu.IX_A(), 0xA988);
+    EXPECT_EQ(cpu.cycles, 4);  // 4 cycles consumed
+
+    // (Indirect), Y address
+    cpu.Y = 112;
+    cpu.memory.WriteByte(0x1006, 0xAA);
+    cpu.memory.WriteByte(0xAA, 0x47);
+    cpu.memory.WriteByte(0xAB, 0xFA);
+    EXPECT_EQ(cpu.IY_A(), 0xFA47 + cpu.Y);
+    EXPECT_EQ(cpu.cycles, 0);  // 4 cycles consumed
+}

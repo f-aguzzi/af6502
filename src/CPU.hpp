@@ -57,7 +57,7 @@ struct CPU
     hword AX_A();   // Absolute, X address
     hword AY_A();   // Absolute, Y address
     hword IX_A();   // (Indirect, X) address
-    hword IY_A();   
+    hword IY_A();   // (Indirect), Y address
 
     // **** Generic Operations ****
 

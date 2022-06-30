@@ -1,16 +1,16 @@
-Start testing: Jun 30 16:51 CEST
+Start testing: Jun 30 22:51 CEST
 ----------------------------------------------------------
 1/1 Testing: AF6502Tests
 1/1 Test: AF6502Tests
 Command: "/Users/federicoaguzzi/Documents/Programmi/af6502/build/test/AF6502Tests"
 Directory: /Users/federicoaguzzi/Documents/Programmi/af6502/build/test
-"AF6502Tests" start time: Jun 30 16:51 CEST
+"AF6502Tests" start time: Jun 30 22:51 CEST
 Output:
 ----------------------------------------------------------
 Running main() from /Users/federicoaguzzi/Documents/Programmi/af6502/src/googletest/googletest/src/gtest_main.cc
-[==========] Running 4 tests from 1 test suite.
+[==========] Running 5 tests from 1 test suite.
 [----------] Global test environment set-up.
-[----------] 4 tests from AF6502Tests
+[----------] 5 tests from AF6502Tests
 [ RUN      ] AF6502Tests.DemonstrateGTestMacro
 [       OK ] AF6502Tests.DemonstrateGTestMacro (0 ms)
 [ RUN      ] AF6502Tests.ResetTest
@@ -19,17 +19,19 @@ Running main() from /Users/federicoaguzzi/Documents/Programmi/af6502/src/googlet
 [       OK ] AF6502Tests.MemoryInstructionTest (0 ms)
 [ RUN      ] AF6502Tests.AddressingModesTest
 [       OK ] AF6502Tests.AddressingModesTest (0 ms)
-[----------] 4 tests from AF6502Tests (0 ms total)
+[ RUN      ] AF6502Tests.AddressReadingTest
+[       OK ] AF6502Tests.AddressReadingTest (0 ms)
+[----------] 5 tests from AF6502Tests (0 ms total)
 
 [----------] Global test environment tear-down
-[==========] 4 tests from 1 test suite ran. (0 ms total)
-[  PASSED  ] 4 tests.
+[==========] 5 tests from 1 test suite ran. (0 ms total)
+[  PASSED  ] 5 tests.
 <end of output>
-Test time =   0.39 sec
+Test time =   0.42 sec
 ----------------------------------------------------------
 Test Passed.
-"AF6502Tests" end time: Jun 30 16:51 CEST
+"AF6502Tests" end time: Jun 30 22:51 CEST
 "AF6502Tests" time elapsed: 00:00:00
 ----------------------------------------------------------
 
-End testing: Jun 30 16:51 CEST
+End testing: Jun 30 22:51 CEST

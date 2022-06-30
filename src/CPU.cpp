@@ -161,8 +161,7 @@ hword CPU::AB_A()
 {
     byte address = FetchInstruction();
     byte address_2 = FetchInstruction();
-    hword temp = (hword)address | (hword)(address_2 << 8);
-    return temp;
+    return (hword)address | (hword)(address_2 << 8);
 }
 
 hword CPU::AX_A()
