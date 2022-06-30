@@ -88,8 +88,9 @@ struct CPU
     void ISC(hword);    // Generic ISC operation
     void RLA(hword);    // Generic RLA operation
     void RRA(hword);    // Generic RRA operation
-    inline void SAX(hword); // Generic SAX operation 
+    void SAX(hword); // Generic SAX operation 
     void SLO(hword);    // Generic SLO operation
     void SRE(hword);    // Generic SRE operation
+
     void execute(hword);  // Opcode decoding & execution
 };

@@ -252,3 +252,189 @@ TEST(AF6502Tests, AddressReadingTest)
     EXPECT_EQ(cpu.IY_A(), 0xFA47 + cpu.Y);
     EXPECT_EQ(cpu.cycles, 0);  // 4 cycles consumed
 }
+
+// ADC test
+TEST(AF6502Tests, ADCTest)
+{
+    FAIL();
+}
+
+// AND test
+TEST(AF6502Tests, ANDTest)
+{
+    FAIL();
+}
+
+// ASL test
+TEST(AF6502Tests, ASLTest)
+{
+    FAIL();
+}
+
+// Branch test
+TEST(AF6502Tests, BranchTest)
+{
+    FAIL();
+}
+
+// BIT test
+TEST(AF6502Tests, BITTest)
+{
+    FAIL();
+}
+
+// Compare test
+TEST(AF6502Tests, CompareTest)
+{
+    FAIL();
+}
+
+// CMP test
+TEST(AF6502Tests, CMPTest)
+{
+    FAIL();
+}
+
+// CPX test
+TEST(AF6502Tests, CPXTest)
+{
+    FAIL();
+}
+
+// CPY test
+TEST(AF6502Tests, CPYTest)
+{
+    FAIL();
+}
+
+// DEC test
+TEST(AF6502Tests, DECTest)
+{
+    FAIL();
+}
+
+// Decrement test
+TEST(AF6502Tests, DecrementTest)
+{
+    FAIL();
+}
+
+// EOR test
+TEST(AF6502Tests, EORTest)
+{
+    FAIL();
+}
+
+// INC test
+TEST(AF6502Tests, INCTest)
+{
+    FAIL();
+}
+
+// Increment test
+TEST(AF6502Tests, IncrementTest)
+{
+    FAIL();
+}
+
+// LD test
+TEST(AF6502Tests, LDTest)
+{
+    FAIL();
+}
+
+// LSR test
+TEST(AF6502Tests, LSRTest)
+{
+    FAIL();
+}
+
+// ORA test
+TEST(AF6502Tests, ORATest)
+{
+    FAIL();
+}
+
+// ROL test
+TEST(AF6502Tests, ROLTest)
+{
+    FAIL();
+}
+
+// ROR test
+TEST(AF6502Tests, RORTest)
+{
+    FAIL();
+}
+
+// SBC test
+TEST(AF6502Tests, SBCTest)
+{
+    FAIL();
+}
+
+// STA test
+TEST(AF6502Tests, STATest)
+{
+    FAIL();
+}
+
+// STX test
+TEST(AF6502Tests, STXTest)
+{
+    FAIL();
+}
+
+// STY test
+TEST(AF6502Tests, STYTest)
+{
+    FAIL();
+}
+
+// DCP test
+TEST(AF6502Tests, DCPTest)
+{
+    FAIL();
+}
+
+// ISC test
+TEST(AF6502Tests, ISCTest)
+{
+    FAIL();
+}
+
+// RLA test
+TEST(AF6502Tests, RLATest)
+{
+    FAIL();
+}
+
+// RRA test
+TEST(AF6502Tests, RRATest)
+{
+    FAIL();
+}
+
+// SAX test
+TEST(AF6502Tests, SAXTest)
+{
+    FAIL();
+}
+
+// SLO test
+TEST(AF6502Tests, SLOTest)
+{
+    FAIL();
+}
+
+// SRE test
+TEST(AF6502Tests, SRETest)
+{
+    FAIL();
+}
+
+// Execute test
+TEST(AF6502Tests, ExecuteTest)
+{
+    FAIL();
+}

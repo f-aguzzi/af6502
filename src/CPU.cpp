@@ -519,7 +519,7 @@ void CPU::RRA(hword address)
     cycles-=2;
 }
 
-inline void CPU::SAX(hword address)
+void CPU::SAX(hword address)
 {
     WriteByte(address, A & X);
 }
