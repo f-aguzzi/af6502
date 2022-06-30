@@ -197,6 +197,7 @@ TEST(AF6502Tests, AddressingModesTest)
 // Test all the address-reading functions
 TEST(AF6502Tests, AddressReadingTest)
 {
+    // Create CPU
     CPU cpu(19);
 
     // Zeropage addressing
@@ -256,7 +257,41 @@ TEST(AF6502Tests, AddressReadingTest)
 // ADC test
 TEST(AF6502Tests, ADCTest)
 {
-    FAIL();
+    // Create CPU
+    CPU cpu(10);
+
+    cpu.A = 123;
+    cpu.ADC(168);   // Create carry on purpose
+
+    EXPECT_EQ(cpu.A, 35);
+    EXPECT_EQ(cpu.N, false);
+    EXPECT_EQ(cpu.Z, false);
+    EXPECT_EQ(cpu.C, true);
+    EXPECT_EQ(cpu.V, false);
+
+    cpu.A = 130;
+    cpu.ADC(140);   // Create carry and overflow on purpose
+    EXPECT_EQ(cpu.A, 14);
+    EXPECT_EQ(cpu.N, false);
+    EXPECT_EQ(cpu.Z, false);
+    EXPECT_EQ(cpu.C, true);
+    EXPECT_EQ(cpu.V, true);
+
+    cpu.A = 140;
+    cpu.ADC(2); // No carry, no overflow, negative result
+    EXPECT_EQ(cpu.A, 142);
+    EXPECT_EQ(cpu.N, true);
+    EXPECT_EQ(cpu.Z, false);
+    EXPECT_EQ(cpu.C, false;
+    EXPECT_EQ(cpu.V, false);
+
+    cpu.A = 0;
+    cpu.ADC(0); // Induce zero sum
+    EXPECT_EQ(cpu.A, 0);
+    EXPECT_EQ(cpu.N, false);
+    EXPECT_EQ(cpu.Z, true); // Should be true (res = 0)
+    EXPECT_EQ(cpu.C, false);
+    EXPECT_EQ(cpu.V, false);
 }
 
 // AND test
@@ -438,3 +473,4 @@ TEST(AF6502Tests, ExecuteTest)
 {
     FAIL();
 }
+

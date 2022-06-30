@@ -24,8 +24,8 @@
 	ProcessorClockFrequency="1800"
 	>
 	<Testing>
-		<StartDateTime>Jun 30 22:51 CEST</StartDateTime>
-		<StartTestTime>1656622290</StartTestTime>
+		<StartDateTime>Jun 30 23:43 CEST</StartDateTime>
+		<StartTestTime>1656625436</StartTestTime>
 		<TestList>
 			<Test>./test/AF6502Tests</Test>
 		</TestList>
@@ -36,7 +36,7 @@
 			<FullCommandLine>/Users/federicoaguzzi/Documents/Programmi/af6502/build/test/AF6502Tests</FullCommandLine>
 			<Results>
 				<NamedMeasurement type="numeric/double" name="Execution Time">
-					<Value>0.417852</Value>
+					<Value>0.356954</Value>
 				</NamedMeasurement>
 				<NamedMeasurement type="numeric/double" name="Processors">
 					<Value>1</Value>
@@ -51,12 +51,12 @@
 					<Value>#CTEST_RESOURCE_GROUP_COUNT=</Value>
 				</NamedMeasurement>
 				<Measurement>
-					<Value encoding="base64" compression="gzip">eJyNUk1vwjAMvfdX+AgHGjaJ3XZAYkPTxIbKOCE0hdRUkZp4stNN49evoaiCiY/65Ngv7z3LzirvrS/Aaet7fdgyOVBLQRa1xRzZGtJFtdtZNSFTOfRB1JypYO2cVXr7MBreK2GjCqKixIASjtN9J2afUSA1Jlk9trGG7KA+goiRRv5u/wCpbMA0WQ3aWMO0pI0umz76b8vkoyUQDIPq6x/4hHT8HJ1+xEKygmz5BvtYHzfSCTryElgHnMbKTBumGt7E+2sXOPSG4KR/WSTD2m1MLxO3kJtks9oC/75EF5UJlvx14rPwmyLjPGcUqRc1oxzlusQZcFeBDHVe/+vEf4Rt6bssvwFDoKDLftLtugJqHuT040+P9+LRAmufngrV48zHi8XTJI5++Jgmfwh5FCw=</Value>
+					<Value encoding="base64" compression="gzip">eJyNk8FuwjAMhu99Ch/hQAOTxm0HtG5omthQGSeEUJaaKlITT3G6aTz9GoqqMgGtT0785f8dxUlLa7XNwUhtB0PYOzIg1oyOxR4zdFqRzMvDQYuEVGnQehZLR7mTxmgh99P78Z1gp0ROlBfokX07PVZCtgsGsVLR5qGJLaQn9ykEhmv7yXEBXGqPcbQZNbGFeUGfsqjraL+1IxtaAkY/Kr/+wWeis+fQ6UfYiDaQrt/gGNt2IU7QkGXvpMd52FlI5ajC63h/7YPDYAyGh9dNUqy6Del14QbpFFtULbjfl9BFqbwme1v4It5pMssyh8zVQy0oQ75tcQHua5CizKpzvfRbbLd88tihWQONUJ8pqmHw5GUxjPqNqUfpRhn92PNfcHX6wUkbw2DSMqrusJytVk9JuOTpYBz9AVoxJwA=</Value>
 				</Measurement>
 			</Results>
 		</Test>
-		<EndDateTime>Jun 30 22:51 CEST</EndDateTime>
-		<EndTestTime>1656622290</EndTestTime>
+		<EndDateTime>Jun 30 23:43 CEST</EndDateTime>
+		<EndTestTime>1656625436</EndTestTime>
 		<ElapsedMinutes>0</ElapsedMinutes>
 	</Testing>
 </Site>

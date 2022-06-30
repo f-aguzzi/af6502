@@ -199,16 +199,10 @@ hword CPU::IY_A()
 void CPU::ADC(byte operand)
 {
     hword temp = (hword)operand + (hword)A;
-    if (temp > 255)
-    {
-        C = 1;
-    }
-    if ((temp & 0x00ff) == 0)
-    {
-        Z = 1;
-    }
+    C = temp > 255;
+    Z = (temp & 0x00ff) == 0;
     N = temp & 0x80;
-    V = (~((hword)A ^ (hword)operand) & ((hword)A ^ (hword)temp) & 0x0080);
+    V = (~((hword)A ^ (hword)operand) & ((hword)A ^ (hword)temp)) & 0x0080;
     A = temp & 0x00FF;
 }
 
