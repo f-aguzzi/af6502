@@ -14,10 +14,16 @@ add_subdirectory(googletest)
 
 set(Headers
     ctre.hpp
+    opcodes.hpp
+    numbers.hpp
+    memory.hpp
+    CPU.hpp
 )
 
 set(Sources
     main.cpp
+    memory.cpp
+    CPU.cpp
 )
 
 add_library(${This} STATIC ${Sources} ${Headers})

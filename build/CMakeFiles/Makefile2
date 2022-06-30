@@ -152,12 +152,12 @@ test/clean: test/CMakeFiles/AF6502Tests.dir/clean
 CMakeFiles/AF6502.dir/all:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/AF6502.dir/build.make CMakeFiles/AF6502.dir/depend
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/AF6502.dir/build.make CMakeFiles/AF6502.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/Users/federicoaguzzi/Documents/Programmi/af6502/build/CMakeFiles --progress-num=1,2 "Built target AF6502"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/Users/federicoaguzzi/Documents/Programmi/af6502/build/CMakeFiles --progress-num=1,2,3,4 "Built target AF6502"
 .PHONY : CMakeFiles/AF6502.dir/all
 
 # Build rule for subdir invocation for target.
 CMakeFiles/AF6502.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /Users/federicoaguzzi/Documents/Programmi/af6502/build/CMakeFiles 2
+	$(CMAKE_COMMAND) -E cmake_progress_start /Users/federicoaguzzi/Documents/Programmi/af6502/build/CMakeFiles 4
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/AF6502.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /Users/federicoaguzzi/Documents/Programmi/af6502/build/CMakeFiles 0
 .PHONY : CMakeFiles/AF6502.dir/rule
@@ -178,7 +178,7 @@ CMakeFiles/AF6502.dir/clean:
 googletest/googlemock/CMakeFiles/gmock.dir/all: googletest/googletest/CMakeFiles/gtest.dir/all
 	$(MAKE) $(MAKESILENT) -f googletest/googlemock/CMakeFiles/gmock.dir/build.make googletest/googlemock/CMakeFiles/gmock.dir/depend
 	$(MAKE) $(MAKESILENT) -f googletest/googlemock/CMakeFiles/gmock.dir/build.make googletest/googlemock/CMakeFiles/gmock.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/Users/federicoaguzzi/Documents/Programmi/af6502/build/CMakeFiles --progress-num=5,6 "Built target gmock"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/Users/federicoaguzzi/Documents/Programmi/af6502/build/CMakeFiles --progress-num=7,8 "Built target gmock"
 .PHONY : googletest/googlemock/CMakeFiles/gmock.dir/all
 
 # Build rule for subdir invocation for target.
@@ -205,7 +205,7 @@ googletest/googlemock/CMakeFiles/gmock_main.dir/all: googletest/googlemock/CMake
 googletest/googlemock/CMakeFiles/gmock_main.dir/all: googletest/googletest/CMakeFiles/gtest.dir/all
 	$(MAKE) $(MAKESILENT) -f googletest/googlemock/CMakeFiles/gmock_main.dir/build.make googletest/googlemock/CMakeFiles/gmock_main.dir/depend
 	$(MAKE) $(MAKESILENT) -f googletest/googlemock/CMakeFiles/gmock_main.dir/build.make googletest/googlemock/CMakeFiles/gmock_main.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/Users/federicoaguzzi/Documents/Programmi/af6502/build/CMakeFiles --progress-num=7,8 "Built target gmock_main"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/Users/federicoaguzzi/Documents/Programmi/af6502/build/CMakeFiles --progress-num=9,10 "Built target gmock_main"
 .PHONY : googletest/googlemock/CMakeFiles/gmock_main.dir/all
 
 # Build rule for subdir invocation for target.
@@ -231,7 +231,7 @@ googletest/googlemock/CMakeFiles/gmock_main.dir/clean:
 googletest/googletest/CMakeFiles/gtest.dir/all:
 	$(MAKE) $(MAKESILENT) -f googletest/googletest/CMakeFiles/gtest.dir/build.make googletest/googletest/CMakeFiles/gtest.dir/depend
 	$(MAKE) $(MAKESILENT) -f googletest/googletest/CMakeFiles/gtest.dir/build.make googletest/googletest/CMakeFiles/gtest.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/Users/federicoaguzzi/Documents/Programmi/af6502/build/CMakeFiles --progress-num=9,10 "Built target gtest"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/Users/federicoaguzzi/Documents/Programmi/af6502/build/CMakeFiles --progress-num=11,12 "Built target gtest"
 .PHONY : googletest/googletest/CMakeFiles/gtest.dir/all
 
 # Build rule for subdir invocation for target.
@@ -257,7 +257,7 @@ googletest/googletest/CMakeFiles/gtest.dir/clean:
 googletest/googletest/CMakeFiles/gtest_main.dir/all: googletest/googletest/CMakeFiles/gtest.dir/all
 	$(MAKE) $(MAKESILENT) -f googletest/googletest/CMakeFiles/gtest_main.dir/build.make googletest/googletest/CMakeFiles/gtest_main.dir/depend
 	$(MAKE) $(MAKESILENT) -f googletest/googletest/CMakeFiles/gtest_main.dir/build.make googletest/googletest/CMakeFiles/gtest_main.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/Users/federicoaguzzi/Documents/Programmi/af6502/build/CMakeFiles --progress-num=11,12 "Built target gtest_main"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/Users/federicoaguzzi/Documents/Programmi/af6502/build/CMakeFiles --progress-num=13,14 "Built target gtest_main"
 .PHONY : googletest/googletest/CMakeFiles/gtest_main.dir/all
 
 # Build rule for subdir invocation for target.
@@ -285,12 +285,12 @@ test/CMakeFiles/AF6502Tests.dir/all: googletest/googletest/CMakeFiles/gtest.dir/
 test/CMakeFiles/AF6502Tests.dir/all: googletest/googletest/CMakeFiles/gtest_main.dir/all
 	$(MAKE) $(MAKESILENT) -f test/CMakeFiles/AF6502Tests.dir/build.make test/CMakeFiles/AF6502Tests.dir/depend
 	$(MAKE) $(MAKESILENT) -f test/CMakeFiles/AF6502Tests.dir/build.make test/CMakeFiles/AF6502Tests.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/Users/federicoaguzzi/Documents/Programmi/af6502/build/CMakeFiles --progress-num=3,4 "Built target AF6502Tests"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/Users/federicoaguzzi/Documents/Programmi/af6502/build/CMakeFiles --progress-num=5,6 "Built target AF6502Tests"
 .PHONY : test/CMakeFiles/AF6502Tests.dir/all
 
 # Build rule for subdir invocation for target.
 test/CMakeFiles/AF6502Tests.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /Users/federicoaguzzi/Documents/Programmi/af6502/build/CMakeFiles 8
+	$(CMAKE_COMMAND) -E cmake_progress_start /Users/federicoaguzzi/Documents/Programmi/af6502/build/CMakeFiles 10
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/AF6502Tests.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /Users/federicoaguzzi/Documents/Programmi/af6502/build/CMakeFiles 0
 .PHONY : test/CMakeFiles/AF6502Tests.dir/rule

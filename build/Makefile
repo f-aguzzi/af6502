@@ -249,6 +249,30 @@ AF6502Tests/fast:
 	$(MAKE) $(MAKESILENT) -f test/CMakeFiles/AF6502Tests.dir/build.make test/CMakeFiles/AF6502Tests.dir/build
 .PHONY : AF6502Tests/fast
 
+CPU.o: CPU.cpp.o
+.PHONY : CPU.o
+
+# target to build an object file
+CPU.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/AF6502.dir/build.make CMakeFiles/AF6502.dir/CPU.cpp.o
+.PHONY : CPU.cpp.o
+
+CPU.i: CPU.cpp.i
+.PHONY : CPU.i
+
+# target to preprocess a source file
+CPU.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/AF6502.dir/build.make CMakeFiles/AF6502.dir/CPU.cpp.i
+.PHONY : CPU.cpp.i
+
+CPU.s: CPU.cpp.s
+.PHONY : CPU.s
+
+# target to generate assembly for a file
+CPU.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/AF6502.dir/build.make CMakeFiles/AF6502.dir/CPU.cpp.s
+.PHONY : CPU.cpp.s
+
 main.o: main.cpp.o
 .PHONY : main.o
 
@@ -273,6 +297,30 @@ main.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/AF6502.dir/build.make CMakeFiles/AF6502.dir/main.cpp.s
 .PHONY : main.cpp.s
 
+memory.o: memory.cpp.o
+.PHONY : memory.o
+
+# target to build an object file
+memory.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/AF6502.dir/build.make CMakeFiles/AF6502.dir/memory.cpp.o
+.PHONY : memory.cpp.o
+
+memory.i: memory.cpp.i
+.PHONY : memory.i
+
+# target to preprocess a source file
+memory.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/AF6502.dir/build.make CMakeFiles/AF6502.dir/memory.cpp.i
+.PHONY : memory.cpp.i
+
+memory.s: memory.cpp.s
+.PHONY : memory.s
+
+# target to generate assembly for a file
+memory.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/AF6502.dir/build.make CMakeFiles/AF6502.dir/memory.cpp.s
+.PHONY : memory.cpp.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -292,9 +340,15 @@ help:
 	@echo "... gmock_main"
 	@echo "... gtest"
 	@echo "... gtest_main"
+	@echo "... CPU.o"
+	@echo "... CPU.i"
+	@echo "... CPU.s"
 	@echo "... main.o"
 	@echo "... main.i"
 	@echo "... main.s"
+	@echo "... memory.o"
+	@echo "... memory.i"
+	@echo "... memory.s"
 .PHONY : help
 
 

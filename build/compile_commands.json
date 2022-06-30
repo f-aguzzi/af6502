@@ -5,6 +5,16 @@
   "file": "/Users/federicoaguzzi/Documents/Programmi/af6502/src/main.cpp"
 },
 {
+  "directory": "/Users/federicoaguzzi/Documents/Programmi/af6502/build",
+  "command": "/usr/bin/clang++   -g -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX11.3.sdk -mmacosx-version-min=11.2 -fPIC -std=gnu++2a -o CMakeFiles/AF6502.dir/memory.cpp.o -c /Users/federicoaguzzi/Documents/Programmi/af6502/src/memory.cpp",
+  "file": "/Users/federicoaguzzi/Documents/Programmi/af6502/src/memory.cpp"
+},
+{
+  "directory": "/Users/federicoaguzzi/Documents/Programmi/af6502/build",
+  "command": "/usr/bin/clang++   -g -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX11.3.sdk -mmacosx-version-min=11.2 -fPIC -std=gnu++2a -o CMakeFiles/AF6502.dir/CPU.cpp.o -c /Users/federicoaguzzi/Documents/Programmi/af6502/src/CPU.cpp",
+  "file": "/Users/federicoaguzzi/Documents/Programmi/af6502/src/CPU.cpp"
+},
+{
   "directory": "/Users/federicoaguzzi/Documents/Programmi/af6502/build/googletest/googlemock",
   "command": "/usr/bin/clang++  -I/Users/federicoaguzzi/Documents/Programmi/af6502/src/googletest/googlemock/include -I/Users/federicoaguzzi/Documents/Programmi/af6502/src/googletest/googlemock -isystem /Users/federicoaguzzi/Documents/Programmi/af6502/src/googletest/googletest/include -isystem /Users/federicoaguzzi/Documents/Programmi/af6502/src/googletest/googletest -g -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX11.3.sdk -mmacosx-version-min=11.2 -fPIC  -DGTEST_HAS_PTHREAD=1   -std=c++2a -o CMakeFiles/gmock.dir/src/gmock-all.cc.o -c /Users/federicoaguzzi/Documents/Programmi/af6502/src/googletest/googlemock/src/gmock-all.cc",
   "file": "/Users/federicoaguzzi/Documents/Programmi/af6502/src/googletest/googlemock/src/gmock-all.cc"
