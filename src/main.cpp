@@ -66,7 +66,7 @@ struct ProgramFlags
     std::string dumpPath;
 };
 
-int main(int argc, char* argv[])
+int go(int argc, char* argv[])
 {
     std::vector<std::string> args(argv, argv + argc);
     ProgramFlags pf;

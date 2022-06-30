@@ -24,8 +24,8 @@
 	ProcessorClockFrequency="1800"
 	>
 	<Testing>
-		<StartDateTime>Jun 30 10:29 CEST</StartDateTime>
-		<StartTestTime>1656577789</StartTestTime>
+		<StartDateTime>Jun 30 16:42 CEST</StartDateTime>
+		<StartTestTime>1656600132</StartTestTime>
 		<TestList>
 			<Test>./test/AF6502Tests</Test>
 		</TestList>
@@ -36,7 +36,7 @@
 			<FullCommandLine>/Users/federicoaguzzi/Documents/Programmi/af6502/build/test/AF6502Tests</FullCommandLine>
 			<Results>
 				<NamedMeasurement type="numeric/double" name="Execution Time">
-					<Value>0.546357</Value>
+					<Value>0.470639</Value>
 				</NamedMeasurement>
 				<NamedMeasurement type="numeric/double" name="Processors">
 					<Value>1</Value>
@@ -51,12 +51,12 @@
 					<Value>#CTEST_RESOURCE_GROUP_COUNT=</Value>
 				</NamedMeasurement>
 				<Measurement>
-					<Value encoding="base64" compression="gzip">eJyNUEFqwzAQvOsVe4wPtpJCe+sh4DaHkjY4zcmYoiprI7C0ZSW1kNfXikNwCgXPabQzaHa2is4Z14FVxi0yaJksyINH9rLFI7LRpLp4OhlZko4WXfByx9SxstZI1T7cL++kZy07oq7HgD5M6VlJ7CMFFFqL+vGKBqpL+gqSZ0y/cB9NwELU+RUNbHr6VP2oo/s2TC5tBB5DHr/+mKd/rp/Tnu/D24saqsMrnNFMhaJES84HVgE3abJVmmmwj3h7mWOHxRKsz2ZtMnohUFB9JuY1Dag4P9KPu73jf/cDVq64zRn67Nb7/VOZ6o/eQvwCQk2jng==</Value>
+					<Value encoding="base64" compression="gzip">eJyNUk1PwzAMvfdX+Lge1gwE3DhMGkwIDaaOnaZpCqlXRWpiZKcg9utp1qna0L58cuyX955l57X31pfgtPW9FNZMDtRckEWtsUC2hnRZbzZWjcjUDn0QNWUqWTtnlV4/3A9ulbBRJVFZYUAJ++m2E7NVFMiMSRaPXSwh36nfQcRIK3+zfYDUNmCWLPpdLGFc0aeu2j76b8vkoyUQDP366x/4gHT4HJ1+xEKygHz+BttY7jeyETryElgHHMfKRBumBt7G++s1cOgNwEl6WiTHxm1MTxN3kItkk8YC/75EF7UJlvx54qPwiyLDomAUaRY1oQLlvMQRcCdwzXZaMAQKukqT69YfUHO/oB9/eF0nrwpY++xQqJlnOpzNnkZx+N3HLPkDBT732g==</Value>
 				</Measurement>
 			</Results>
 		</Test>
-		<EndDateTime>Jun 30 10:29 CEST</EndDateTime>
-		<EndTestTime>1656577790</EndTestTime>
+		<EndDateTime>Jun 30 16:42 CEST</EndDateTime>
+		<EndTestTime>1656600132</EndTestTime>
 		<ElapsedMinutes>0</ElapsedMinutes>
 	</Testing>
 </Site>

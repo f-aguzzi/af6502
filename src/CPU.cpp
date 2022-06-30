@@ -8,8 +8,6 @@
     #define OPCODES_h
 #endif
 
-
-
 CPU::CPU(word n_cycles)
 {
     cycles = n_cycles;
@@ -17,10 +15,17 @@ CPU::CPU(word n_cycles)
     reset();
 }
 
+CPU::CPU(word n_cycles, Memory mem)
+{
+    cycles = n_cycles;
+    memory = mem;
+    reset();
+}
+
 void CPU::reset()
 {
     // Reset PC and SP to default values
-    PC = 0xFFFC;
+    PC = 0xFFC;
     SP = 0x0100;
 
     // Reset accumulator, registers and flags
@@ -61,14 +66,14 @@ byte CPU::ZP()
 
 byte CPU::ZX()
 {
-    byte address = FetchInstruction() + X;
+    byte address = ((hword)FetchInstruction() + X) & 0x00FF;
     cycles--;
     return ReadByte(address);
 }
 
 byte CPU::ZY()
 {
-    byte address = FetchInstruction() + Y;
+    byte address = ((hword)FetchInstruction() + Y) & 0x00FF;
     cycles--;
     return ReadByte(address);
 }
@@ -86,8 +91,10 @@ byte CPU::AX()
 {
     byte address = FetchInstruction();
     byte address_2 = FetchInstruction();
-    hword full_address = (hword)address | (hword)(address_2 << 8) + X;
-    if ((full_address & 0xFF00) != (PC & 0xFF00))
+    hword full_address = ((hword)address | (hword)(address_2 << 8));
+    hword carry_sum = (((full_address & 0x00FF) + X) >> 8) & 0x01;
+    full_address += X;
+    if (carry_sum)
     {
         cycles--;
     }
@@ -98,8 +105,10 @@ byte CPU::AY()
 {
     byte address = FetchInstruction();
     byte address_2 = FetchInstruction();
-    hword full_address = (hword)address | (hword)(address_2 << 8) + Y;
-    if ((full_address & 0xFF00) != (PC & 0xFF00))
+    hword full_address = ((hword)address | (hword)(address_2 << 8));
+    hword carry_sum = (((full_address & 0x00FF) + Y) >> 8) & 0x01;
+    full_address += Y;
+    if (carry_sum)
     {
         cycles--;
     }
@@ -108,11 +117,11 @@ byte CPU::AY()
 
 byte CPU::IX()
 {
-    byte imm_address = FetchInstruction() + X;
+    hword imm_address = (FetchInstruction() + X) & 0x00FF;
     cycles--;
     byte address = ReadByte(imm_address);
     byte address_2 = ReadByte(++imm_address);
-    hword full_address = (((hword)address_2 << 8) | (hword)address);
+    hword full_address = ((hword)address | (hword)(address_2 << 8));
     return ReadByte(full_address);
 }
 
@@ -121,11 +130,13 @@ byte CPU::IY()
     byte imm_address = FetchInstruction();
     byte address = ReadByte(imm_address);
     byte address_2 = ReadByte(++imm_address);
-    hword full_address = (((hword)address_2 << 8) | (hword)address) + Y;
-    if ((full_address & 0xFF00) != (PC & 0xFF00))
+    hword full_address = (((hword)address_2 << 8) | (hword)address);
+    hword carry_sum = (((full_address & 0x00FF) + Y) >> 8) & 0x01;
+    if (carry_sum)
     {
         cycles--;
     }
+    full_address += Y;
     return ReadByte(full_address);
 }
 

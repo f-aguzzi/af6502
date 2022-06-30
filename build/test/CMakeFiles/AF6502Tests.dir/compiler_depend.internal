@@ -282,4 +282,7 @@ test/CMakeFiles/AF6502Tests.dir/tests.cpp.o
  /Users/federicoaguzzi/Documents/Programmi/af6502/src/googletest/googletest/include/gtest/gtest-typed-test.h
  /Users/federicoaguzzi/Documents/Programmi/af6502/src/googletest/googletest/include/gtest/gtest_pred_impl.h
  /Users/federicoaguzzi/Documents/Programmi/af6502/src/googletest/googletest/include/gtest/gtest_prod.h
+ /Users/federicoaguzzi/Documents/Programmi/af6502/src/memory.hpp
+ /Users/federicoaguzzi/Documents/Programmi/af6502/src/numbers.hpp
+ /Users/federicoaguzzi/Documents/Programmi/af6502/src/CPU.hpp
 

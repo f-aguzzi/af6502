@@ -280,7 +280,10 @@ test/CMakeFiles/AF6502Tests.dir/tests.cpp.o: /Users/federicoaguzzi/Documents/Pro
   /Users/federicoaguzzi/Documents/Programmi/af6502/src/googletest/googletest/include/gtest/gtest-test-part.h \
   /Users/federicoaguzzi/Documents/Programmi/af6502/src/googletest/googletest/include/gtest/gtest-typed-test.h \
   /Users/federicoaguzzi/Documents/Programmi/af6502/src/googletest/googletest/include/gtest/gtest_pred_impl.h \
-  /Users/federicoaguzzi/Documents/Programmi/af6502/src/googletest/googletest/include/gtest/gtest_prod.h
+  /Users/federicoaguzzi/Documents/Programmi/af6502/src/googletest/googletest/include/gtest/gtest_prod.h \
+  /Users/federicoaguzzi/Documents/Programmi/af6502/src/memory.hpp \
+  /Users/federicoaguzzi/Documents/Programmi/af6502/src/numbers.hpp \
+  /Users/federicoaguzzi/Documents/Programmi/af6502/src/CPU.hpp
 
 
 /Users/federicoaguzzi/Documents/Programmi/af6502/src/googletest/googletest/include/gtest/gtest_pred_impl.h:
@@ -364,6 +367,8 @@ test/CMakeFiles/AF6502Tests.dir/tests.cpp.o: /Users/federicoaguzzi/Documents/Pro
 /Library/Developer/CommandLineTools/SDKs/MacOSX11.3.sdk/usr/include/sys/_types/_fd_isset.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX11.3.sdk/usr/include/sys/_types/_fd_zero.h:
+
+/Users/federicoaguzzi/Documents/Programmi/af6502/src/memory.hpp:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX11.3.sdk/usr/include/sys/_types/_fd_clr.h:
 
@@ -801,6 +806,8 @@ test/CMakeFiles/AF6502Tests.dir/tests.cpp.o: /Users/federicoaguzzi/Documents/Pro
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX11.3.sdk/usr/include/sys/_pthread/_pthread_rwlock_t.h:
 
+/Users/federicoaguzzi/Documents/Programmi/af6502/src/CPU.hpp:
+
 /Library/Developer/CommandLineTools/SDKs/MacOSX11.3.sdk/usr/include/c++/v1/array:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX11.3.sdk/usr/include/c++/v1/stdlib.h:
@@ -812,6 +819,8 @@ test/CMakeFiles/AF6502Tests.dir/tests.cpp.o: /Users/federicoaguzzi/Documents/Pro
 /Library/Developer/CommandLineTools/SDKs/MacOSX11.3.sdk/usr/include/c++/v1/__undef_macros:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX11.3.sdk/usr/include/AvailabilityVersions.h:
+
+/Users/federicoaguzzi/Documents/Programmi/af6502/src/numbers.hpp:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX11.3.sdk/usr/include/xlocale/__wctype.h:
 

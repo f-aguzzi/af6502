@@ -15,7 +15,6 @@ byte Memory::operator[](hword address) const
 
 void Memory::WriteByte(hword address, byte data)
 {
-    printf("Indirizzo di scrittura: %d\n", (int)address);
     Mem[address] = data;
 }
 
