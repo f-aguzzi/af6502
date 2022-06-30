@@ -1,10 +1,10 @@
-Start testing: Jun 30 16:42 CEST
+Start testing: Jun 30 16:51 CEST
 ----------------------------------------------------------
 1/1 Testing: AF6502Tests
 1/1 Test: AF6502Tests
 Command: "/Users/federicoaguzzi/Documents/Programmi/af6502/build/test/AF6502Tests"
 Directory: /Users/federicoaguzzi/Documents/Programmi/af6502/build/test
-"AF6502Tests" start time: Jun 30 16:42 CEST
+"AF6502Tests" start time: Jun 30 16:51 CEST
 Output:
 ----------------------------------------------------------
 Running main() from /Users/federicoaguzzi/Documents/Programmi/af6502/src/googletest/googletest/src/gtest_main.cc
@@ -25,11 +25,11 @@ Running main() from /Users/federicoaguzzi/Documents/Programmi/af6502/src/googlet
 [==========] 4 tests from 1 test suite ran. (0 ms total)
 [  PASSED  ] 4 tests.
 <end of output>
-Test time =   0.47 sec
+Test time =   0.39 sec
 ----------------------------------------------------------
 Test Passed.
-"AF6502Tests" end time: Jun 30 16:42 CEST
+"AF6502Tests" end time: Jun 30 16:51 CEST
 "AF6502Tests" time elapsed: 00:00:00
 ----------------------------------------------------------
 
-End testing: Jun 30 16:42 CEST
+End testing: Jun 30 16:51 CEST

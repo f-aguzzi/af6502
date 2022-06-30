@@ -24,8 +24,8 @@
 	ProcessorClockFrequency="1800"
 	>
 	<Testing>
-		<StartDateTime>Jun 30 16:42 CEST</StartDateTime>
-		<StartTestTime>1656600132</StartTestTime>
+		<StartDateTime>Jun 30 16:51 CEST</StartDateTime>
+		<StartTestTime>1656600667</StartTestTime>
 		<TestList>
 			<Test>./test/AF6502Tests</Test>
 		</TestList>
@@ -36,7 +36,7 @@
 			<FullCommandLine>/Users/federicoaguzzi/Documents/Programmi/af6502/build/test/AF6502Tests</FullCommandLine>
 			<Results>
 				<NamedMeasurement type="numeric/double" name="Execution Time">
-					<Value>0.470639</Value>
+					<Value>0.391479</Value>
 				</NamedMeasurement>
 				<NamedMeasurement type="numeric/double" name="Processors">
 					<Value>1</Value>
@@ -55,8 +55,8 @@
 				</Measurement>
 			</Results>
 		</Test>
-		<EndDateTime>Jun 30 16:42 CEST</EndDateTime>
-		<EndTestTime>1656600132</EndTestTime>
+		<EndDateTime>Jun 30 16:51 CEST</EndDateTime>
+		<EndTestTime>1656600667</EndTestTime>
 		<ElapsedMinutes>0</ElapsedMinutes>
 	</Testing>
 </Site>
