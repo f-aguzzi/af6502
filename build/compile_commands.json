@@ -1,0 +1,32 @@
+[
+{
+  "directory": "/Users/federicoaguzzi/Documents/Programmi/af6502/build",
+  "command": "/usr/bin/clang++   -g -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX11.3.sdk -mmacosx-version-min=11.2 -fPIC -std=gnu++2a -o CMakeFiles/AF6502.dir/main.cpp.o -c /Users/federicoaguzzi/Documents/Programmi/af6502/src/main.cpp",
+  "file": "/Users/federicoaguzzi/Documents/Programmi/af6502/src/main.cpp"
+},
+{
+  "directory": "/Users/federicoaguzzi/Documents/Programmi/af6502/build/googletest/googlemock",
+  "command": "/usr/bin/clang++  -I/Users/federicoaguzzi/Documents/Programmi/af6502/src/googletest/googlemock/include -I/Users/federicoaguzzi/Documents/Programmi/af6502/src/googletest/googlemock -isystem /Users/federicoaguzzi/Documents/Programmi/af6502/src/googletest/googletest/include -isystem /Users/federicoaguzzi/Documents/Programmi/af6502/src/googletest/googletest -g -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX11.3.sdk -mmacosx-version-min=11.2 -fPIC  -DGTEST_HAS_PTHREAD=1   -std=c++2a -o CMakeFiles/gmock.dir/src/gmock-all.cc.o -c /Users/federicoaguzzi/Documents/Programmi/af6502/src/googletest/googlemock/src/gmock-all.cc",
+  "file": "/Users/federicoaguzzi/Documents/Programmi/af6502/src/googletest/googlemock/src/gmock-all.cc"
+},
+{
+  "directory": "/Users/federicoaguzzi/Documents/Programmi/af6502/build/googletest/googlemock",
+  "command": "/usr/bin/clang++  -isystem /Users/federicoaguzzi/Documents/Programmi/af6502/src/googletest/googlemock/include -isystem /Users/federicoaguzzi/Documents/Programmi/af6502/src/googletest/googlemock -isystem /Users/federicoaguzzi/Documents/Programmi/af6502/src/googletest/googletest/include -isystem /Users/federicoaguzzi/Documents/Programmi/af6502/src/googletest/googletest -g -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX11.3.sdk -mmacosx-version-min=11.2 -fPIC  -DGTEST_HAS_PTHREAD=1   -std=c++2a -o CMakeFiles/gmock_main.dir/src/gmock_main.cc.o -c /Users/federicoaguzzi/Documents/Programmi/af6502/src/googletest/googlemock/src/gmock_main.cc",
+  "file": "/Users/federicoaguzzi/Documents/Programmi/af6502/src/googletest/googlemock/src/gmock_main.cc"
+},
+{
+  "directory": "/Users/federicoaguzzi/Documents/Programmi/af6502/build/googletest/googletest",
+  "command": "/usr/bin/clang++  -I/Users/federicoaguzzi/Documents/Programmi/af6502/src/googletest/googletest/include -I/Users/federicoaguzzi/Documents/Programmi/af6502/src/googletest/googletest -g -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX11.3.sdk -mmacosx-version-min=11.2 -fPIC  -DGTEST_HAS_PTHREAD=1   -std=c++2a -o CMakeFiles/gtest.dir/src/gtest-all.cc.o -c /Users/federicoaguzzi/Documents/Programmi/af6502/src/googletest/googletest/src/gtest-all.cc",
+  "file": "/Users/federicoaguzzi/Documents/Programmi/af6502/src/googletest/googletest/src/gtest-all.cc"
+},
+{
+  "directory": "/Users/federicoaguzzi/Documents/Programmi/af6502/build/googletest/googletest",
+  "command": "/usr/bin/clang++  -isystem /Users/federicoaguzzi/Documents/Programmi/af6502/src/googletest/googletest/include -isystem /Users/federicoaguzzi/Documents/Programmi/af6502/src/googletest/googletest -g -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX11.3.sdk -mmacosx-version-min=11.2 -fPIC  -DGTEST_HAS_PTHREAD=1   -std=c++2a -o CMakeFiles/gtest_main.dir/src/gtest_main.cc.o -c /Users/federicoaguzzi/Documents/Programmi/af6502/src/googletest/googletest/src/gtest_main.cc",
+  "file": "/Users/federicoaguzzi/Documents/Programmi/af6502/src/googletest/googletest/src/gtest_main.cc"
+},
+{
+  "directory": "/Users/federicoaguzzi/Documents/Programmi/af6502/build/test",
+  "command": "/usr/bin/clang++  -isystem /Users/federicoaguzzi/Documents/Programmi/af6502/src/googletest/googletest/include -isystem /Users/federicoaguzzi/Documents/Programmi/af6502/src/googletest/googletest -g -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX11.3.sdk -mmacosx-version-min=11.2 -fPIE -std=gnu++2a -o CMakeFiles/AF6502Tests.dir/tests.cpp.o -c /Users/federicoaguzzi/Documents/Programmi/af6502/src/test/tests.cpp",
+  "file": "/Users/federicoaguzzi/Documents/Programmi/af6502/src/test/tests.cpp"
+}
+]

@@ -1,0 +1,1 @@
+/usr/bin/clang++ -g -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX11.3.sdk -mmacosx-version-min=11.2 -Wl,-search_paths_first -Wl,-headerpad_max_install_names CMakeFiles/AF6502Tests.dir/tests.cpp.o -o AF6502Tests  ../lib/libgtest_main.a ../libAF6502.a ../lib/libgtest.a 

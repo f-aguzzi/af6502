@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Site BuildName="(empty)"
+	BuildStamp="20220630-0829-Experimental"
+	Name="(empty)"
+	Generator="ctest-3.22.0"
+	CompilerName=""
+	CompilerVersion=""
+	OSName="macOS"
+	Hostname="Federicos-Air.home-life.hub"
+	OSRelease="11.2.3"
+	OSVersion="20D91"
+	OSPlatform="x86_64"
+	Is64Bits="1"
+	VendorString="GenuineIntel"
+	VendorID="Intel Corporation"
+	FamilyID="6"
+	ModelID="61"
+	ProcessorCacheSize="32768"
+	NumberOfLogicalCPU="4"
+	NumberOfPhysicalCPU="2"
+	TotalVirtualMemory="1024"
+	TotalPhysicalMemory="8192"
+	LogicalProcessorsPerPhysical="8"
+	ProcessorClockFrequency="1800"
+	>
+	<Testing>
+		<StartDateTime>Jun 30 10:29 CEST</StartDateTime>
+		<StartTestTime>1656577789</StartTestTime>
+		<TestList>
+			<Test>./test/AF6502Tests</Test>
+		</TestList>
+		<Test Status="passed">
+			<Name>AF6502Tests</Name>
+			<Path>./test</Path>
+			<FullName>./test/AF6502Tests</FullName>
+			<FullCommandLine>/Users/federicoaguzzi/Documents/Programmi/af6502/build/test/AF6502Tests</FullCommandLine>
+			<Results>
+				<NamedMeasurement type="numeric/double" name="Execution Time">
+					<Value>0.546357</Value>
+				</NamedMeasurement>
+				<NamedMeasurement type="numeric/double" name="Processors">
+					<Value>1</Value>
+				</NamedMeasurement>
+				<NamedMeasurement type="text/string" name="Completion Status">
+					<Value>Completed</Value>
+				</NamedMeasurement>
+				<NamedMeasurement type="text/string" name="Command Line">
+					<Value>/Users/federicoaguzzi/Documents/Programmi/af6502/build/test/AF6502Tests</Value>
+				</NamedMeasurement>
+				<NamedMeasurement type="text/string" name="Environment">
+					<Value>#CTEST_RESOURCE_GROUP_COUNT=</Value>
+				</NamedMeasurement>
+				<Measurement>
+					<Value encoding="base64" compression="gzip">eJyNUEFqwzAQvOsVe4wPtpJCe+sh4DaHkjY4zcmYoiprI7C0ZSW1kNfXikNwCgXPabQzaHa2is4Z14FVxi0yaJksyINH9rLFI7LRpLp4OhlZko4WXfByx9SxstZI1T7cL++kZy07oq7HgD5M6VlJ7CMFFFqL+vGKBqpL+gqSZ0y/cB9NwELU+RUNbHr6VP2oo/s2TC5tBB5DHr/+mKd/rp/Tnu/D24saqsMrnNFMhaJES84HVgE3abJVmmmwj3h7mWOHxRKsz2ZtMnohUFB9JuY1Dag4P9KPu73jf/cDVq64zRn67Nb7/VOZ6o/eQvwCQk2jng==</Value>
+				</Measurement>
+			</Results>
+		</Test>
+		<EndDateTime>Jun 30 10:29 CEST</EndDateTime>
+		<EndTestTime>1656577790</EndTestTime>
+		<ElapsedMinutes>0</ElapsedMinutes>
+	</Testing>
+</Site>
