@@ -282,7 +282,7 @@ TEST(AF6502Tests, ADCTest)
     EXPECT_EQ(cpu.A, 142);
     EXPECT_EQ(cpu.N, true);
     EXPECT_EQ(cpu.Z, false);
-    EXPECT_EQ(cpu.C, false;
+    EXPECT_EQ(cpu.C, false);
     EXPECT_EQ(cpu.V, false);
 
     cpu.A = 0;
@@ -297,79 +297,223 @@ TEST(AF6502Tests, ADCTest)
 // AND test
 TEST(AF6502Tests, ANDTest)
 {
-    FAIL();
+    // Create CPU
+    CPU cpu(0);
+
+    cpu.A = 0xD5;
+    cpu.AND(0xAB);
+    EXPECT_EQ(cpu.A, 0x81);
+    EXPECT_EQ(cpu.Z, false);
+    EXPECT_EQ(cpu.N, true);
+
+    cpu.AND(0x00);
+    EXPECT_EQ(cpu.A, 0x00);
+    EXPECT_EQ(cpu.Z, true);
+    EXPECT_EQ(cpu.N, false);
 }
 
 // ASL test
 TEST(AF6502Tests, ASLTest)
 {
-    FAIL();
+    // Create CPU
+    CPU cpu(0);
+
+    cpu.ASL(0x55);
+    EXPECT_EQ(cpu.A, 0xAA);
+    EXPECT_EQ(cpu.N, true);
+    EXPECT_EQ(cpu.Z, false);
+    EXPECT_EQ(cpu.C, false);
 }
 
 // Branch test
 TEST(AF6502Tests, BranchTest)
 {
-    FAIL();
+    // Create CPU
+    CPU cpu(2);
+
+    // Branch with page jump
+    cpu.PC = 0xFA;
+    cpu.Branch(9, true);
+    EXPECT_EQ(cpu.PC, 0xFA + 9);
+    EXPECT_EQ(cpu.cycles, 0);   // 2 cycles consumed
+    
+    // Branch with no page jump
+    cpu.PC = 0xFFC;
+    cpu.Branch(2, true);
+    EXPECT_EQ(cpu.PC, 0xFFC + 2);
+    EXPECT_EQ(cpu.cycles, 0);   // 0 cycles consumed
+
+    // Unexecuted jump
+    cpu.PC = 0xFFC;
+    cpu.Branch(15, false);
+    EXPECT_EQ(cpu.PC, 0xFFC);
+    EXPECT_EQ(cpu.cycles, 0);   // 0 cycles consumed
 }
 
 // BIT test
 TEST(AF6502Tests, BITTest)
 {
-    FAIL();
+    // Create CPU
+    CPU cpu(1);
+    
+    cpu.A = 0x3B;
+    cpu.BIT(0x8C);
+    EXPECT_EQ(cpu.Z, false);    // A & operand != 0
+    EXPECT_EQ(cpu.N, true);     // operand's MSB is 1
+    EXPECT_EQ(cpu.V, false);    // operand's 6th bit is 0
+    EXPECT_EQ(cpu.cycles, 0);   // 1 cycle consumed
 }
 
 // Compare test
 TEST(AF6502Tests, CompareTest)
 {
-    FAIL();
+    // Create CPU
+    CPU cpu(0);
+
+    // Case 1: A < B
+    cpu.A = 7;
+    cpu.Compare(cpu.A, 9);
+    EXPECT_EQ(cpu.N, true);
+    EXPECT_EQ(cpu.Z, false);
+    EXPECT_EQ(cpu.C, true);    // -9 = 247 (2's) -> 247 + 7 causes carry
+
+    // Case 2: A = B
+    cpu.A = 4;
+    cpu.Compare(cpu.A, 4);
+    EXPECT_EQ(cpu.N, false);
+    EXPECT_EQ(cpu.Z, true);
+    EXPECT_EQ(cpu.C, true);     // -4 = 252 (2's) -> 252 + 4 causes carry
+
+    // Case 3: A > B
+    cpu.A = 184;
+    cpu.Compare(cpu.A, 6);
+    EXPECT_EQ(cpu.N, true);     // 6 (2c) = 249. 249 + 184 = 177 (N) + C
+    EXPECT_EQ(cpu.Z, false);
+    EXPECT_EQ(cpu.C, true);
 }
 
 // CMP test
 TEST(AF6502Tests, CMPTest)
 {
-    FAIL();
+    // Create CPU
+    CPU cpu(0);
+
+    cpu.A = 184;
+    cpu.CMP(6);
+    EXPECT_EQ(cpu.N, true);     // 6 (2c) = 249. 249 + 184 = 177 (N) + C
+    EXPECT_EQ(cpu.Z, false);
+    EXPECT_EQ(cpu.C, true);
 }
 
 // CPX test
 TEST(AF6502Tests, CPXTest)
 {
-    FAIL();
+    // Create CPU
+    CPU cpu(1);
+
+    cpu.X = 4;
+    cpu.CPX(4);
+    EXPECT_EQ(cpu.N, false);
+    EXPECT_EQ(cpu.Z, true);
+    EXPECT_EQ(cpu.C, true);     // -4 = 252 (2's) -> 252 + 4 causes carry
 }
 
 // CPY test
 TEST(AF6502Tests, CPYTest)
 {
-    FAIL();
+    // Create CPU
+    CPU cpu(1);
+
+    cpu.Y = 7;
+    cpu.CPY(9);
+    EXPECT_EQ(cpu.N, true);
+    EXPECT_EQ(cpu.Z, false);
+    EXPECT_EQ(cpu.C, true);    // -9 = 247 (2's) -> 247 + 7 causes carry
 }
 
 // DEC test
 TEST(AF6502Tests, DECTest)
 {
-    FAIL();
+    // Create CPU
+    CPU cpu(3);
+   
+    cpu.memory.WriteByte(0xAEAB, 0x03);
+    cpu.DEC(cpu.memory.ReadByte(0xAEAB), 0xAEAB);
+    EXPECT_EQ(cpu.memory.ReadByte(0xAEAB), 0x02);
+    EXPECT_EQ(cpu.cycles, 0);   // 3 cycles consumed
 }
 
 // Decrement test
 TEST(AF6502Tests, DecrementTest)
 {
-    FAIL();
+    // Create CPU
+    CPU cpu(3);
+
+    // Accumulator
+    cpu.A = 34;
+    cpu.Decrement(cpu.A);
+    EXPECT_EQ(cpu.A, 33);
+
+    // X
+    cpu.X = 21;
+    cpu.Decrement(cpu.X);
+    EXPECT_EQ(cpu.X, 20);
+
+    // Y
+    cpu.Y = 108;
+    cpu.Decrement(cpu.Y);
+    EXPECT_EQ(cpu.Y, 107);
+
+    EXPECT_EQ(cpu.cycles, 0);   // 1 cycle / op = 3 total cycles consumed
 }
 
 // EOR test
 TEST(AF6502Tests, EORTest)
 {
-    FAIL();
+    // Create CPU
+    CPU cpu(0);
+
+    cpu.A = 0x9A;
+    cpu.EOR(0x43);
+    EXPECT_EQ(cpu.A, 0xD9);     // 0x9A xor 0x43
+    EXPECT_EQ(cpu.Z, false);    // 0x9A != 0
+    EXPECT_EQ(cpu.N, true);     // 0xD9 MSB = 1
 }
 
 // INC test
 TEST(AF6502Tests, INCTest)
 {
-    FAIL();
+    // Create CPU
+    CPU cpu(3);
+   
+    cpu.memory.WriteByte(0xAEEB, 0x03);
+    cpu.INC(cpu.memory.ReadByte(0xAEEB), 0xAEEB);
+    EXPECT_EQ(cpu.memory.ReadByte(0xAEEB), 0x04);
+    EXPECT_EQ(cpu.cycles, 0);   // 3 cycles consumed
 }
 
 // Increment test
 TEST(AF6502Tests, IncrementTest)
 {
-    FAIL();
+    // Create CPU
+    CPU cpu(3);
+
+    // Accumulator
+    cpu.A = 34;
+    cpu.Increment(cpu.A);
+    EXPECT_EQ(cpu.A, 35);
+
+    // X
+    cpu.X = 21;
+    cpu.Increment(cpu.X);
+    EXPECT_EQ(cpu.X, 22);
+
+    // Y
+    cpu.Y = 108;
+    cpu.Increment(cpu.Y);
+    EXPECT_EQ(cpu.Y, 109);
+
+    EXPECT_EQ(cpu.cycles, 0);   // 1 cycle / op = 3 total cycles consumed
 }
 
 // LD test

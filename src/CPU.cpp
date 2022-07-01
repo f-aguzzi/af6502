@@ -200,7 +200,7 @@ void CPU::ADC(byte operand)
 {
     hword temp = (hword)operand + (hword)A;
     C = temp > 255;
-    Z = (temp & 0x00ff) == 0;
+    Z = (temp & 0x00FF) == 0;
     N = temp & 0x80;
     V = (~((hword)A ^ (hword)operand) & ((hword)A ^ (hword)temp)) & 0x0080;
     A = temp & 0x00FF;
@@ -209,36 +209,27 @@ void CPU::ADC(byte operand)
 void CPU::AND(byte operand)
 {
     A = A & operand;
-    if ((A & 0x00ff) == 0)
-    {
-        Z = 1;
-    }
+    Z = (A & 0x00FF) == 0;
     N = A & 0x80;
 }
 
 void CPU::ASL(byte operand)
 {
     hword temp = (hword)operand << 1;
-    if (temp > 255)
-    {
-        C = 1;
-    }
-    if ((temp & 0x00ff) == 0)
-    {
-        Z = 1;
-    }
+    C = temp > 255;
+    Z = (temp & 0x00FF) == 0;
     N = temp & 0x80;
     A = temp & 0x00FF;
 }
 
 void CPU::Branch(byte address, bool condition)
 {
-    word page = PC % 256;
+    word page = PC / 256;
     if (condition)
     {
         PC += address;
     }
-    if (PC % 256 > page)
+    if (PC / 256 > page)
     {
         cycles -= 2;
     }
@@ -246,32 +237,18 @@ void CPU::Branch(byte address, bool condition)
 
 void CPU::BIT(byte operand)
 {
-    cycles -= 2;
-    N = operand & 0x2;
-    V = operand & 0x3;
-    Z = operand && A;
+    Z = (A & operand) == 0;
+    N = (operand >> 7) & 0x01;
+    V = (operand >> 6) & 0x01;
+    cycles--;
 }
 
 void CPU::Compare(byte &reg, byte operand)
 {
     hword temp = (hword)reg - (hword)operand;
-    if (temp < 0)
-    {
-        Z = 0;
-        C = 0;
-        N = (temp >> 7) & 0x1;
-    }
-    if (temp == 0)
-    {
-        Z = 1;
-        C = 1;
-        N = 0;
-    }
-    if (temp > 0)
-    {
-        Z = 0;
-        C = 1;
-    }
+    Z = (temp == 0);
+    C = (temp >= 0);
+    N = (temp >> 7) & 0x1;
 }
 
 void CPU::CMP(byte operand)
@@ -292,66 +269,42 @@ void CPU::CPY(byte operand)
 void CPU::DEC(byte operand, hword address)
 {
     hword temp = (hword)operand--;
-    cycles--;
-    if (temp > 255)
-    {
-        C = 1;
-    }
-    if ((temp & 0x00ff) == 0)
-    {
-        Z = 1;
-    }
+    C = (temp > 255);
+    Z = ((temp & 0x00FF) == 0);
     N = temp & 0x80;
-    cycles--;
+    cycles-=2;
     WriteByte(address, temp & 0x00FF);
 }
 
 void CPU::Decrement(byte &reg)
 {
     reg--;
-    if ((reg & 0x00ff) == 0)
-    {
-        Z = 1;
-    }
+    Z = ((reg & 0x00FF) == 0);
     N = reg & 0x80;
     cycles--;
 }
 
 void CPU::EOR(byte operand)
 {
-    byte temp = A ^ operand;
-    if ((temp & 0x00ff) == 0)
-    {
-        Z = 1;
-    }
-    N = temp & 0x80;
-    A = temp;
+    A ^= operand;
+    Z = ((A & 0x00FF) == 0);
+    N = A & 0x80;
 }
 
 void CPU::INC(byte operand, hword address)
 {
     hword temp = (hword)operand + 1;
-    cycles--;
-    if (temp > 255)
-    {
-        C = 1;
-    }
-    if ((temp & 0x00ff) == 0)
-    {
-        Z = 1;
-    }
+    C = (temp > 255);
+    Z = ((A & 0x00FF) == 0);
     N = temp & 0x80;
-    cycles--;
+    cycles -= 2;
     WriteByte(address, temp & 0x00FF);
 }
 
 void CPU::Increment(byte &reg)
 {
     reg++;
-    if ((reg & 0x00ff) == 0)
-    {
-        Z = 1;
-    }
+    Z = ((reg & 0x00FF) == 0);
     N = reg & 0x80;
     cycles--;
 }
@@ -364,14 +317,8 @@ void CPU::LD(byte &reg, byte operand)
 byte CPU::LSR(byte operand)
 {
     hword temp = (hword)operand << 1;
-    if (temp > 255)
-    {
-        C = 1;
-    }
-    if ((temp & 0x00ff) == 0)
-    {
-        Z = 1;
-    }
+    C = (temp > 255);
+    Z = ((temp & 0x00ff) == 0);
     cycles--;
     return temp & 0xFF;
 }
@@ -379,24 +326,15 @@ byte CPU::LSR(byte operand)
 void CPU::ORA(byte operand)
 {
     A = A | operand;
-    if ((A & 0x00ff) == 0)
-    {
-        Z = 1;
-    }
+    Z = ((A & 0x00ff) == 0);
     N = A & 0x80;
 }
 
 byte CPU::ROL(byte operand)
 {
     hword temp = operand << 1;
-    if (temp > 255)
-    {
-        C = 1;
-    }
-    if ((temp & 0x00ff) == 0)
-    {
-        Z = 1;
-    }
+    C = (temp > 255);
+    Z = ((temp & 0x00FF) == 0);
     N = temp & 0x80;
     cycles--;
     return (byte)(temp | C);
@@ -406,10 +344,7 @@ byte CPU::ROR(byte operand)
 {
     C = operand & 1;
     byte temp = operand >> 1;
-    if ((temp & 0x00ff) == 0)
-    {
-        Z = 1;
-    }
+    Z = ((temp & 0x00ff) == 0);
     N = temp & 0x80;
     cycles--;
     return (byte)(temp | (C << 7));
@@ -439,20 +374,14 @@ void CPU::DCP(hword address) //
 {
     byte operand = ReadByte(address);
     hword temp = (hword)operand - 1;
-    if (temp > 255)
-    {
-        C = 1;
-    }
-    if ((temp & 0x00ff) == 0)
-    {
-        Z = 1;
-    }
+    C = (temp > 255);
+    Z = ((temp & 0x00ff) == 0);
     N = temp & 0x80;
     V = (~((hword)A ^ (hword)operand) & ((hword)A ^ (hword)temp) & 0x0080);
     operand = temp;
     Compare(A, operand);
     WriteByte(address, operand);
-    cycles-=2;
+    cycles -= 2;
 }
 
 void CPU::ISC(hword address) //
@@ -460,40 +389,28 @@ void CPU::ISC(hword address) //
     byte operand = ReadByte(address);
     hword temp = (hword)operand + 1;
     A = A - operand - !C;
-    if (temp > 255)
-    {
-        C = 1;
-    }
-    if ((temp & 0x00ff) == 0)
-    {
-        Z = 1;
-    }
+    C = (temp > 255);
+    Z = ((temp & 0x00FF) == 0);
     N = temp & 0x80;
     V = (~((hword)A ^ (hword)operand) & ((hword)A ^ (hword)temp) & 0x0080);
     operand = temp;
     Compare(A, operand);
     WriteByte(address, operand);
-    cycles-=2;
+    cycles -= 2;
 }
 
 void CPU::RLA(hword address)
 {
     byte operand = ReadByte(address);
     hword temp = (hword)operand << 1;
-    if (temp > 255)
-    {
-        C = 1;
-    }
+    C = (temp > 255);
     temp = (temp & 0xFE) | C;
-    if ((temp & 0x00ff) == 0)
-    {
-        Z = 1;
-    }
+    Z = ((temp & 0x00FF) == 0);
     N = temp & 0x80;
     operand = (byte)temp;
     A = A & operand;
     WriteByte(address, operand);
-    cycles-=2;
+    cycles -= 2;
 }
 
 void CPU::RRA(hword address)
@@ -503,14 +420,11 @@ void CPU::RRA(hword address)
     byte temp = operand >> 1;
     temp = (temp & 0x7F) & (C << 7);
     A = A + operand +  C;
-    if ((temp & 0x00ff) == 0)
-    {
-        Z = 1;
-    }
+    Z = ((temp & 0x00FF) == 0);
     N = temp & 0x80;
     V = (~((hword)A ^ (hword)operand) & ((hword)A ^ (hword)temp) & 0x0080);
     WriteByte(address, operand);
-    cycles-=2;
+    cycles -= 2;
 }
 
 void CPU::SAX(hword address)
@@ -524,13 +438,10 @@ void CPU::SLO(hword address)
     hword temp = (hword)operand << 1;
     temp &= 0xFFFE;
     C = (temp >> 7) & 0x0001;
-    if ((temp & 0x00ff) == 0)
-    {
-        Z = 1;
-    }
+    Z = ((temp & 0x00FF) == 0);
     N = temp & 0x80;
     cycles--;
-    byte result = temp;
+    byte result = temp & 0x00FF;
     WriteByte(address, result);
 }
 
@@ -540,10 +451,7 @@ void CPU::SRE(hword address)
     C = operand & 0x01;
     operand >>= 1;
     operand &= 0x7F;
-    if ((operand & 0x00ff) == 0)
-    {
-        Z = 1;
-    }
+    Z = ((operand & 0x00ff) == 0);
     N = operand & 0x80;
     cycles--;
     WriteByte(address, operand);
