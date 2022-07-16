@@ -519,31 +519,82 @@ TEST(AF6502Tests, IncrementTest)
 // LD test
 TEST(AF6502Tests, LDTest)
 {
-    FAIL();
+    // Create CPU
+    CPU cpu(0);
+
+    // Accumulator
+    cpu.LD(cpu.A, 0x33);
+    EXPECT_EQ(cpu.A, 0x33);
+
+    // X
+    cpu.LD(cpu.X, 0x64);
+    EXPECT_EQ(cpu.X, 0x64);
+
+    // Y
+    cpu.LD(cpu.Y, 0x0E);
+    EXPECT_EQ(cpu.Y, 0x0E);
 }
 
 // LSR test
 TEST(AF6502Tests, LSRTest)
 {
-    FAIL();
+
+    CPU cpu(2); // Create CPU
+
+    cpu.A = 0x5B;
+    cpu.LSR(cpu.A);
+    EXPECT_EQ(cpu.A, 0x2D);
+    EXPECT_EQ(cpu.C, true);     // LSB = 1 (carried out)
+    EXPECT_EQ(cpu.N, false);    // MSB (post-shift) = 0 (always)
+    EXPECT_EQ(cpu.Z, false);    // non-negative result
+    EXPECT_EQ(cpu.cycles, 0);   // 2 cycles consumed
 }
 
 // ORA test
 TEST(AF6502Tests, ORATest)
 {
-    FAIL();
+    // Create CPU
+    CPU cpu(0);
+
+    cpu.A = 0x49;   
+    cpu.ORA(0x72);  
+    EXPECT_EQ(cpu.A, 0x7B);
+    EXPECT_EQ(cpu.N, false);    // MSB = 0
+    EXPECT_EQ(cpu.Z, false);    // A != 0
 }
 
 // ROL test
 TEST(AF6502Tests, ROLTest)
 {
-    FAIL();
+    // Create CPU
+    CPU cpu(0);
+
+    cpu.A = 0xAB;
+    cpu.C = true;
+    cpu.ROL();
+    EXPECT_EQ(cpu.A, 0x57);
+
+    cpu.A = 0xAB;
+    cpu.C = false;
+    cpu.ROL();
+    EXPECT_EQ(cpu.A, 0x56);
 }
 
 // ROR test
 TEST(AF6502Tests, RORTest)
 {
-    FAIL();
+    // Create CPU
+    CPU cpu(0);
+
+    cpu.A = 0xAB;
+    cpu.C = true;
+    cpu.ROR();
+    EXPECT_EQ(cpu.A, 0xD5);
+
+    cpu.A = 0xAB;
+    cpu.C = false;
+    cpu.ROR();
+    EXPECT_EQ(cpu.A, 0x55);
 }
 
 // SBC test

@@ -316,11 +316,12 @@ void CPU::LD(byte &reg, byte operand)
 
 byte CPU::LSR(byte operand)
 {
-    hword temp = (hword)operand << 1;
-    C = (temp > 255);
-    Z = ((temp & 0x00ff) == 0);
-    cycles--;
-    return temp & 0xFF;
+    C = operand & 0x01;
+    N = 0;
+    byte temp = (hword)operand >> 1;
+    Z = (temp == 0);
+    cycles -= 2;
+    return temp & 0x7F;
 }
 
 void CPU::ORA(byte operand)
