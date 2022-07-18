@@ -600,13 +600,27 @@ TEST(AF6502Tests, RORTest)
 // SBC test
 TEST(AF6502Tests, SBCTest)
 {
-    FAIL();
+    // It's just ADC with 2's complement on the operator
+
+    // Create CPU
+    CPU cpu();
+
+    cpu.A = 0x08;
+    cpu.SBC(0x02);
+
+    EXPECT_EQ(cpu.A, 0x06);
 }
 
 // STA test
 TEST(AF6502Tests, STATest)
 {
-    FAIL();
+    // Create CPU
+    CPU cpu(20);
+
+    cpu.A = 0xD7;
+    cpu.STA(0xD7, 0xE8F2);
+
+    EXPECT_EQ(0xD7, cpu.Memory.ReadByte(0xE8F2));
 }
 
 // STX test
