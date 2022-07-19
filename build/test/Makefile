@@ -57,10 +57,10 @@ RM = /usr/local/Cellar/cmake/3.22.0/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /Users/federicoaguzzi/Documents/Programmi/af6502/src
+CMAKE_SOURCE_DIR = /Volumes/Federico/Programmi/C++/af6502/src
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /Users/federicoaguzzi/Documents/Programmi/af6502/build
+CMAKE_BINARY_DIR = /Volumes/Federico/Programmi/C++/af6502/build
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -142,14 +142,14 @@ install/strip/fast: preinstall/fast
 
 # The main all target
 all: cmake_check_build_system
-	cd /Users/federicoaguzzi/Documents/Programmi/af6502/build && $(CMAKE_COMMAND) -E cmake_progress_start /Users/federicoaguzzi/Documents/Programmi/af6502/build/CMakeFiles /Users/federicoaguzzi/Documents/Programmi/af6502/build/test//CMakeFiles/progress.marks
-	cd /Users/federicoaguzzi/Documents/Programmi/af6502/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /Users/federicoaguzzi/Documents/Programmi/af6502/build/CMakeFiles 0
+	cd /Volumes/Federico/Programmi/C++/af6502/build && $(CMAKE_COMMAND) -E cmake_progress_start /Volumes/Federico/Programmi/C++/af6502/build/CMakeFiles /Volumes/Federico/Programmi/C++/af6502/build/test//CMakeFiles/progress.marks
+	cd /Volumes/Federico/Programmi/C++/af6502/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /Volumes/Federico/Programmi/C++/af6502/build/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
 clean:
-	cd /Users/federicoaguzzi/Documents/Programmi/af6502/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/clean
+	cd /Volumes/Federico/Programmi/C++/af6502/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/clean
 .PHONY : clean
 
 # The main clean target
@@ -158,22 +158,22 @@ clean/fast: clean
 
 # Prepare targets for installation.
 preinstall: all
-	cd /Users/federicoaguzzi/Documents/Programmi/af6502/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/preinstall
+	cd /Volumes/Federico/Programmi/C++/af6502/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/preinstall
 .PHONY : preinstall
 
 # Prepare targets for installation.
 preinstall/fast:
-	cd /Users/federicoaguzzi/Documents/Programmi/af6502/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/preinstall
+	cd /Volumes/Federico/Programmi/C++/af6502/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/preinstall
 .PHONY : preinstall/fast
 
 # clear depends
 depend:
-	cd /Users/federicoaguzzi/Documents/Programmi/af6502/build && $(CMAKE_COMMAND) -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 1
+	cd /Volumes/Federico/Programmi/C++/af6502/build && $(CMAKE_COMMAND) -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 1
 .PHONY : depend
 
 # Convenience name for target.
 test/CMakeFiles/AF6502Tests.dir/rule:
-	cd /Users/federicoaguzzi/Documents/Programmi/af6502/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/AF6502Tests.dir/rule
+	cd /Volumes/Federico/Programmi/C++/af6502/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/AF6502Tests.dir/rule
 .PHONY : test/CMakeFiles/AF6502Tests.dir/rule
 
 # Convenience name for target.
@@ -182,7 +182,7 @@ AF6502Tests: test/CMakeFiles/AF6502Tests.dir/rule
 
 # fast build rule for target.
 AF6502Tests/fast:
-	cd /Users/federicoaguzzi/Documents/Programmi/af6502/build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/AF6502Tests.dir/build.make test/CMakeFiles/AF6502Tests.dir/build
+	cd /Volumes/Federico/Programmi/C++/af6502/build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/AF6502Tests.dir/build.make test/CMakeFiles/AF6502Tests.dir/build
 .PHONY : AF6502Tests/fast
 
 tests.o: tests.cpp.o
@@ -190,7 +190,7 @@ tests.o: tests.cpp.o
 
 # target to build an object file
 tests.cpp.o:
-	cd /Users/federicoaguzzi/Documents/Programmi/af6502/build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/AF6502Tests.dir/build.make test/CMakeFiles/AF6502Tests.dir/tests.cpp.o
+	cd /Volumes/Federico/Programmi/C++/af6502/build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/AF6502Tests.dir/build.make test/CMakeFiles/AF6502Tests.dir/tests.cpp.o
 .PHONY : tests.cpp.o
 
 tests.i: tests.cpp.i
@@ -198,7 +198,7 @@ tests.i: tests.cpp.i
 
 # target to preprocess a source file
 tests.cpp.i:
-	cd /Users/federicoaguzzi/Documents/Programmi/af6502/build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/AF6502Tests.dir/build.make test/CMakeFiles/AF6502Tests.dir/tests.cpp.i
+	cd /Volumes/Federico/Programmi/C++/af6502/build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/AF6502Tests.dir/build.make test/CMakeFiles/AF6502Tests.dir/tests.cpp.i
 .PHONY : tests.cpp.i
 
 tests.s: tests.cpp.s
@@ -206,7 +206,7 @@ tests.s: tests.cpp.s
 
 # target to generate assembly for a file
 tests.cpp.s:
-	cd /Users/federicoaguzzi/Documents/Programmi/af6502/build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/AF6502Tests.dir/build.make test/CMakeFiles/AF6502Tests.dir/tests.cpp.s
+	cd /Volumes/Federico/Programmi/C++/af6502/build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/AF6502Tests.dir/build.make test/CMakeFiles/AF6502Tests.dir/tests.cpp.s
 .PHONY : tests.cpp.s
 
 # Help Target
@@ -237,6 +237,6 @@ help:
 # No rule that depends on this can have commands that come from listfiles
 # because they might be regenerated.
 cmake_check_build_system:
-	cd /Users/federicoaguzzi/Documents/Programmi/af6502/build && $(CMAKE_COMMAND) -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 0
+	cd /Volumes/Federico/Programmi/C++/af6502/build && $(CMAKE_COMMAND) -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 0
 .PHONY : cmake_check_build_system
 

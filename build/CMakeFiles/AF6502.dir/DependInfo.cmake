@@ -8,9 +8,9 @@ set(CMAKE_DEPENDS_LANGUAGES
 
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
-  "/Users/federicoaguzzi/Documents/Programmi/af6502/src/CPU.cpp" "CMakeFiles/AF6502.dir/CPU.cpp.o" "gcc" "CMakeFiles/AF6502.dir/CPU.cpp.o.d"
-  "/Users/federicoaguzzi/Documents/Programmi/af6502/src/main.cpp" "CMakeFiles/AF6502.dir/main.cpp.o" "gcc" "CMakeFiles/AF6502.dir/main.cpp.o.d"
-  "/Users/federicoaguzzi/Documents/Programmi/af6502/src/memory.cpp" "CMakeFiles/AF6502.dir/memory.cpp.o" "gcc" "CMakeFiles/AF6502.dir/memory.cpp.o.d"
+  "/Volumes/Federico/Programmi/C++/af6502/src/CPU.cpp" "CMakeFiles/AF6502.dir/CPU.cpp.o" "gcc" "CMakeFiles/AF6502.dir/CPU.cpp.o.d"
+  "/Volumes/Federico/Programmi/C++/af6502/src/main.cpp" "CMakeFiles/AF6502.dir/main.cpp.o" "gcc" "CMakeFiles/AF6502.dir/main.cpp.o.d"
+  "/Volumes/Federico/Programmi/C++/af6502/src/memory.cpp" "CMakeFiles/AF6502.dir/memory.cpp.o" "gcc" "CMakeFiles/AF6502.dir/memory.cpp.o.d"
   )
 
 # Targets to which this target links.

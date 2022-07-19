@@ -4,7 +4,7 @@
 # compile CXX with /usr/bin/clang++
 CXX_DEFINES = 
 
-CXX_INCLUDES = -isystem /Users/federicoaguzzi/Documents/Programmi/af6502/src/googletest/googletest/include -isystem /Users/federicoaguzzi/Documents/Programmi/af6502/src/googletest/googletest
+CXX_INCLUDES = -isystem /Volumes/Federico/Programmi/C++/af6502/src/googletest/googletest/include -isystem /Volumes/Federico/Programmi/C++/af6502/src/googletest/googletest
 
 CXX_FLAGS = -g -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX11.3.sdk -mmacosx-version-min=11.2 -fPIE -std=gnu++2a
 

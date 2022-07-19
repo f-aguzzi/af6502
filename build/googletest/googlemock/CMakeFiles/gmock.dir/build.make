@@ -53,10 +53,10 @@ RM = /usr/local/Cellar/cmake/3.22.0/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /Users/federicoaguzzi/Documents/Programmi/af6502/src
+CMAKE_SOURCE_DIR = /Volumes/Federico/Programmi/C++/af6502/src
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /Users/federicoaguzzi/Documents/Programmi/af6502/build
+CMAKE_BINARY_DIR = /Volumes/Federico/Programmi/C++/af6502/build
 
 # Include any dependencies generated for this target.
 include googletest/googlemock/CMakeFiles/gmock.dir/depend.make
@@ -70,18 +70,18 @@ include googletest/googlemock/CMakeFiles/gmock.dir/progress.make
 include googletest/googlemock/CMakeFiles/gmock.dir/flags.make
 
 googletest/googlemock/CMakeFiles/gmock.dir/src/gmock-all.cc.o: googletest/googlemock/CMakeFiles/gmock.dir/flags.make
-googletest/googlemock/CMakeFiles/gmock.dir/src/gmock-all.cc.o: /Users/federicoaguzzi/Documents/Programmi/af6502/src/googletest/googlemock/src/gmock-all.cc
+googletest/googlemock/CMakeFiles/gmock.dir/src/gmock-all.cc.o: /Volumes/Federico/Programmi/C++/af6502/src/googletest/googlemock/src/gmock-all.cc
 googletest/googlemock/CMakeFiles/gmock.dir/src/gmock-all.cc.o: googletest/googlemock/CMakeFiles/gmock.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/federicoaguzzi/Documents/Programmi/af6502/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object googletest/googlemock/CMakeFiles/gmock.dir/src/gmock-all.cc.o"
-	cd /Users/federicoaguzzi/Documents/Programmi/af6502/build/googletest/googlemock && /usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT googletest/googlemock/CMakeFiles/gmock.dir/src/gmock-all.cc.o -MF CMakeFiles/gmock.dir/src/gmock-all.cc.o.d -o CMakeFiles/gmock.dir/src/gmock-all.cc.o -c /Users/federicoaguzzi/Documents/Programmi/af6502/src/googletest/googlemock/src/gmock-all.cc
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Volumes/Federico/Programmi/C++/af6502/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object googletest/googlemock/CMakeFiles/gmock.dir/src/gmock-all.cc.o"
+	cd /Volumes/Federico/Programmi/C++/af6502/build/googletest/googlemock && /usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT googletest/googlemock/CMakeFiles/gmock.dir/src/gmock-all.cc.o -MF CMakeFiles/gmock.dir/src/gmock-all.cc.o.d -o CMakeFiles/gmock.dir/src/gmock-all.cc.o -c /Volumes/Federico/Programmi/C++/af6502/src/googletest/googlemock/src/gmock-all.cc
 
 googletest/googlemock/CMakeFiles/gmock.dir/src/gmock-all.cc.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/gmock.dir/src/gmock-all.cc.i"
-	cd /Users/federicoaguzzi/Documents/Programmi/af6502/build/googletest/googlemock && /usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/federicoaguzzi/Documents/Programmi/af6502/src/googletest/googlemock/src/gmock-all.cc > CMakeFiles/gmock.dir/src/gmock-all.cc.i
+	cd /Volumes/Federico/Programmi/C++/af6502/build/googletest/googlemock && /usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Volumes/Federico/Programmi/C++/af6502/src/googletest/googlemock/src/gmock-all.cc > CMakeFiles/gmock.dir/src/gmock-all.cc.i
 
 googletest/googlemock/CMakeFiles/gmock.dir/src/gmock-all.cc.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/gmock.dir/src/gmock-all.cc.s"
-	cd /Users/federicoaguzzi/Documents/Programmi/af6502/build/googletest/googlemock && /usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/federicoaguzzi/Documents/Programmi/af6502/src/googletest/googlemock/src/gmock-all.cc -o CMakeFiles/gmock.dir/src/gmock-all.cc.s
+	cd /Volumes/Federico/Programmi/C++/af6502/build/googletest/googlemock && /usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Volumes/Federico/Programmi/C++/af6502/src/googletest/googlemock/src/gmock-all.cc -o CMakeFiles/gmock.dir/src/gmock-all.cc.s
 
 # Object files for target gmock
 gmock_OBJECTS = \
@@ -93,19 +93,19 @@ gmock_EXTERNAL_OBJECTS =
 lib/libgmock.a: googletest/googlemock/CMakeFiles/gmock.dir/src/gmock-all.cc.o
 lib/libgmock.a: googletest/googlemock/CMakeFiles/gmock.dir/build.make
 lib/libgmock.a: googletest/googlemock/CMakeFiles/gmock.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/Users/federicoaguzzi/Documents/Programmi/af6502/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Linking CXX static library ../../lib/libgmock.a"
-	cd /Users/federicoaguzzi/Documents/Programmi/af6502/build/googletest/googlemock && $(CMAKE_COMMAND) -P CMakeFiles/gmock.dir/cmake_clean_target.cmake
-	cd /Users/federicoaguzzi/Documents/Programmi/af6502/build/googletest/googlemock && $(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/gmock.dir/link.txt --verbose=$(VERBOSE)
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/Volumes/Federico/Programmi/C++/af6502/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Linking CXX static library ../../lib/libgmock.a"
+	cd /Volumes/Federico/Programmi/C++/af6502/build/googletest/googlemock && $(CMAKE_COMMAND) -P CMakeFiles/gmock.dir/cmake_clean_target.cmake
+	cd /Volumes/Federico/Programmi/C++/af6502/build/googletest/googlemock && $(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/gmock.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.
 googletest/googlemock/CMakeFiles/gmock.dir/build: lib/libgmock.a
 .PHONY : googletest/googlemock/CMakeFiles/gmock.dir/build
 
 googletest/googlemock/CMakeFiles/gmock.dir/clean:
-	cd /Users/federicoaguzzi/Documents/Programmi/af6502/build/googletest/googlemock && $(CMAKE_COMMAND) -P CMakeFiles/gmock.dir/cmake_clean.cmake
+	cd /Volumes/Federico/Programmi/C++/af6502/build/googletest/googlemock && $(CMAKE_COMMAND) -P CMakeFiles/gmock.dir/cmake_clean.cmake
 .PHONY : googletest/googlemock/CMakeFiles/gmock.dir/clean
 
 googletest/googlemock/CMakeFiles/gmock.dir/depend:
-	cd /Users/federicoaguzzi/Documents/Programmi/af6502/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /Users/federicoaguzzi/Documents/Programmi/af6502/src /Users/federicoaguzzi/Documents/Programmi/af6502/src/googletest/googlemock /Users/federicoaguzzi/Documents/Programmi/af6502/build /Users/federicoaguzzi/Documents/Programmi/af6502/build/googletest/googlemock /Users/federicoaguzzi/Documents/Programmi/af6502/build/googletest/googlemock/CMakeFiles/gmock.dir/DependInfo.cmake --color=$(COLOR)
+	cd /Volumes/Federico/Programmi/C++/af6502/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /Volumes/Federico/Programmi/C++/af6502/src /Volumes/Federico/Programmi/C++/af6502/src/googletest/googlemock /Volumes/Federico/Programmi/C++/af6502/build /Volumes/Federico/Programmi/C++/af6502/build/googletest/googlemock /Volumes/Federico/Programmi/C++/af6502/build/googletest/googlemock/CMakeFiles/gmock.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : googletest/googlemock/CMakeFiles/gmock.dir/depend
 

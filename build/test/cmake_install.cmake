@@ -1,4 +1,4 @@
-# Install script for directory: /Users/federicoaguzzi/Documents/Programmi/af6502/src/test
+# Install script for directory: /Volumes/Federico/Programmi/C++/af6502/src/test
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)

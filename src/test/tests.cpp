@@ -571,12 +571,12 @@ TEST(AF6502Tests, ROLTest)
 
     cpu.A = 0xAB;
     cpu.C = true;
-    cpu.ROL();
+    cpu.ROL(cpu.A);
     EXPECT_EQ(cpu.A, 0x57);
 
     cpu.A = 0xAB;
     cpu.C = false;
-    cpu.ROL();
+    cpu.ROL(cpu.A);
     EXPECT_EQ(cpu.A, 0x56);
 }
 
@@ -588,12 +588,12 @@ TEST(AF6502Tests, RORTest)
 
     cpu.A = 0xAB;
     cpu.C = true;
-    cpu.ROR();
+    cpu.ROR(cpu.A);
     EXPECT_EQ(cpu.A, 0xD5);
 
     cpu.A = 0xAB;
     cpu.C = false;
-    cpu.ROR();
+    cpu.ROR(cpu.A);
     EXPECT_EQ(cpu.A, 0x55);
 }
 
@@ -603,7 +603,7 @@ TEST(AF6502Tests, SBCTest)
     // It's just ADC with 2's complement on the operator
 
     // Create CPU
-    CPU cpu();
+    CPU cpu(0);
 
     cpu.A = 0x08;
     cpu.SBC(0x02);
@@ -618,9 +618,9 @@ TEST(AF6502Tests, STATest)
     CPU cpu(20);
 
     cpu.A = 0xD7;
-    cpu.STA(0xD7, 0xE8F2);
+    cpu.STA(0xE8F2);
 
-    EXPECT_EQ(0xD7, cpu.Memory.ReadByte(0xE8F2));
+    EXPECT_EQ(0xD7, cpu.ReadByte(0xE8F2));
 }
 
 // STX test
