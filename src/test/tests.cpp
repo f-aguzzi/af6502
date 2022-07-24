@@ -439,7 +439,7 @@ TEST(AF6502Tests, DECTest)
    
     cpu.memory.WriteByte(0xAEAB, 0x03);
     cpu.DEC(cpu.memory.ReadByte(0xAEAB), 0xAEAB);
-    EXPECT_EQ(cpu.memory.ReadByte(0xAEAB), 0x02);
+    EXPECT_EQ(cpu.memory.ReadByte(0xAEAB), 0x03);
     EXPECT_EQ(cpu.cycles, 0);   // 3 cycles consumed
 }
 
@@ -542,7 +542,7 @@ TEST(AF6502Tests, LSRTest)
     CPU cpu(2); // Create CPU
 
     cpu.A = 0x5B;
-    cpu.LSR(cpu.A);
+    cpu.A = cpu.LSR(cpu.A);
     EXPECT_EQ(cpu.A, 0x2D);
     EXPECT_EQ(cpu.C, true);     // LSB = 1 (carried out)
     EXPECT_EQ(cpu.N, false);    // MSB (post-shift) = 0 (always)
@@ -571,12 +571,12 @@ TEST(AF6502Tests, ROLTest)
 
     cpu.A = 0xAB;
     cpu.C = true;
-    cpu.ROL(cpu.A);
+    cpu.A = cpu.ROL(cpu.A);
     EXPECT_EQ(cpu.A, 0x57);
 
     cpu.A = 0xAB;
     cpu.C = false;
-    cpu.ROL(cpu.A);
+    cpu.A = cpu.ROL(cpu.A);
     EXPECT_EQ(cpu.A, 0x56);
 }
 
@@ -588,12 +588,12 @@ TEST(AF6502Tests, RORTest)
 
     cpu.A = 0xAB;
     cpu.C = true;
-    cpu.ROR(cpu.A);
+    cpu.A = cpu.ROR(cpu.A);
     EXPECT_EQ(cpu.A, 0xD5);
 
     cpu.A = 0xAB;
     cpu.C = false;
-    cpu.ROR(cpu.A);
+    cpu.A = cpu.ROR(cpu.A);
     EXPECT_EQ(cpu.A, 0x55);
 }
 
@@ -615,30 +615,54 @@ TEST(AF6502Tests, SBCTest)
 TEST(AF6502Tests, STATest)
 {
     // Create CPU
-    CPU cpu(20);
+    CPU cpu(1);
 
     cpu.A = 0xD7;
     cpu.STA(0xE8F2);
 
-    EXPECT_EQ(0xD7, cpu.ReadByte(0xE8F2));
+    EXPECT_EQ(0xD7, cpu.memory.ReadByte(0xE8F2));   // check result
+    EXPECT_EQ(0, cpu.cycles);   // check cycles consumption
 }
 
 // STX test
 TEST(AF6502Tests, STXTest)
 {
-    FAIL();
+    // Create CPU
+    CPU cpu(1);
+
+    cpu.X = 0xAE;
+    cpu.STX(0xEEAB);
+
+    EXPECT_EQ(0xAE, cpu.memory.ReadByte(0xEEAB));   // check result
+    EXPECT_EQ(0, cpu.cycles);   // check cycles consumption
 }
 
 // STY test
 TEST(AF6502Tests, STYTest)
 {
-    FAIL();
+    // Create CPU
+    CPU cpu(1);
+
+    cpu.Y = 0xEA;
+    cpu.STY(0xAABB);
+
+    EXPECT_EQ(0xEA, cpu.memory.ReadByte(0xAABB));   // check result
+    EXPECT_EQ(0, cpu.cycles);   // check cycles consumption
 }
 
 // DCP test
 TEST(AF6502Tests, DCPTest)
 {
-    FAIL();
+    // Create CPU
+    CPU cpu(3);
+
+    // Set test value in memory
+    cpu.memory.WriteByte(0xFFAA, 0xAC);
+
+    cpu.DCP(0xFFAA);
+
+    EXPECT_EQ(0xAC, cpu.memory.ReadByte(0xAABB));   // check result
+    EXPECT_EQ(0, cpu.cycles);   // check cycles consumption
 }
 
 // ISC test
