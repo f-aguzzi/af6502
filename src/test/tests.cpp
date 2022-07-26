@@ -668,7 +668,21 @@ TEST(AF6502Tests, DCPTest)
 // ISC test
 TEST(AF6502Tests, ISCTest)
 {
-    FAIL();
+    // Create CPU
+    CPU cpu(3);
+
+    // Set test value in memory
+    cpu.memory.WriteByte(0x2345, 0x81);
+
+    // Set test value in accumulator and carry
+    cpu.A = 0x93;
+    cpu.C = true;
+
+    cpu.ISC(0x2345);
+
+    EXPECT_EQ(0x82, cpu.memory.ReadByte(0x2345));   // check result
+    EXPECT_EQ(0x10, cpu.A);     // Check accumulator
+    EXPECT_EQ(0, cpu.cycles);   // check cycles consumption
 }
 
 // RLA test
