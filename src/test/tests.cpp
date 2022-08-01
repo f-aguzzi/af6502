@@ -674,13 +674,13 @@ TEST(AF6502Tests, ISCTest)
     // Set test value in memory
     cpu.memory.WriteByte(0x2345, 0x81);
 
-    // Set test value in accumulator and carry
+    // Set test values in accumulator and carry
     cpu.A = 0x93;
     cpu.C = true;
 
     cpu.ISC(0x2345);
 
-    EXPECT_EQ(0x82, cpu.memory.ReadByte(0x2345));   // check result
+    EXPECT_EQ(0x82, cpu.memory.ReadByte(0x2345));   // Check result
     EXPECT_EQ(0x10, cpu.A);     // Check accumulator
     EXPECT_EQ(0, cpu.cycles);   // check cycles consumption
 }
@@ -688,13 +688,35 @@ TEST(AF6502Tests, ISCTest)
 // RLA test
 TEST(AF6502Tests, RLATest)
 {
-    FAIL();
+    // Create CPU
+    CPU cpu(3);
+
+    // Set test values in memory and carry
+    cpu.memory.WriteByte(0x11BA, 0xD6);
+    cpu.C = false;
+
+    cpu.RLA(0x11BA);
+
+    EXPECT_EQ(0xAC, cpu.memory.ReadByte(0x11BA));   // Check result
+    EXPECT_EQ(true, cpu.C);     // Check carry
+    EXPECT_EQ(0, cpu.cycles);   // check cycles consumption
 }
 
 // RRA test
 TEST(AF6502Tests, RRATest)
 {
-    FAIL();
+    // Create CPU
+    CPU cpu(3);
+
+    // Set test values in memory and carry
+    cpu.memory.WriteByte(0xE0E0, 0x2E);
+    cpu.C = true;
+
+    cpu.RRA(0xE0E0);
+
+    EXPECT_EQ(0x97, cpu.memory.ReadByte(0xE0E0));   // Check result
+    EXPECT_EQ(false, cpu.C);     // Check carry
+    EXPECT_EQ(0, cpu.cycles);   // check cycles consumption
 }
 
 // SAX test
