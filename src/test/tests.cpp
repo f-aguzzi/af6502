@@ -722,7 +722,17 @@ TEST(AF6502Tests, RRATest)
 // SAX test
 TEST(AF6502Tests, SAXTest)
 {
-    FAIL();
+    // Create CPU
+    CPU cpu(4);
+
+    // Set test values in accumulator and X
+    cpu.A = 0xED;
+    cpu.X = 0x5C;
+
+    cpu.SAX(0xF0AA);
+
+    EXPECT_EQ(0x4C, cpu.memory.ReadByte(0xF0AA));   // Check result
+    EXPECT_EQ(0, cpu.cycles);   // check cycles consumption
 }
 
 // SLO test
