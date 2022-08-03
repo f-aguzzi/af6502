@@ -738,7 +738,18 @@ TEST(AF6502Tests, SAXTest)
 // SLO test
 TEST(AF6502Tests, SLOTest)
 {
-    FAIL();
+    // Create CPU
+    CPU cpu(4);
+
+    // Set test values in memory and accumulator
+    cpu.memory.WriteByte(0x6502, 0x54);
+    cpu.A = 0x98;
+
+    cpu.SLO(0x6502);
+
+    EXPECT_EQ(0xA8, cpu.memory.ReadByte(0x6502));   // Check result
+    EXPECT_EQ(false, cpu.C);   // Check carry
+    EXPECT_EQ(0xDC, cpu.A);   // Check accumulator
 }
 
 // SRE test
