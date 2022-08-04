@@ -723,7 +723,7 @@ TEST(AF6502Tests, RRATest)
 TEST(AF6502Tests, SAXTest)
 {
     // Create CPU
-    CPU cpu(4);
+    CPU cpu(1);
 
     // Set test values in accumulator and X
     cpu.A = 0xED;
@@ -739,7 +739,7 @@ TEST(AF6502Tests, SAXTest)
 TEST(AF6502Tests, SLOTest)
 {
     // Create CPU
-    CPU cpu(4);
+    CPU cpu(3);
 
     // Set test values in memory and accumulator
     cpu.memory.WriteByte(0x6502, 0x54);
@@ -750,12 +750,23 @@ TEST(AF6502Tests, SLOTest)
     EXPECT_EQ(0xA8, cpu.memory.ReadByte(0x6502));   // Check result
     EXPECT_EQ(false, cpu.C);   // Check carry
     EXPECT_EQ(0xDC, cpu.A);   // Check accumulator
+    EXPECT_EQ(0, cpu.cycles);   // check cycles consumption
 }
 
 // SRE test
 TEST(AF6502Tests, SRETest)
 {
-    FAIL();
+    // Create CPU
+    CPU cpu(3);
+
+    // Set test value in memory
+    cpu.memory.WriteByte(0x2505, 0x65);
+
+    cpu.SRE(0x2505);
+
+    EXPECT_EQ(0x32, cpu.memory.ReadByte(0x2505));   // Check result
+    EXPECT_EQ(true, cpu.C);     // Check carry
+    EXPECT_EQ(0, cpu.cycles);   // Check cycles consumption
 }
 
 // Execute test
