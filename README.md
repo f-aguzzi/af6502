@@ -3,8 +3,9 @@
 
 This emulator is still a work in progress.
 
-All opcodes have been implemented, but nothing has been thoroughly tested yet.
-Opcodes may not be working as intended, or completely misfire.
+All opcodes have been implemented, and they were tested individually
+through unit tests, but no global testing (i.e., running a piece of
+assembly through the emulator) has been performed yet.
 
 ## Usage
 
